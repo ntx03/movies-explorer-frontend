@@ -1,0 +1,217 @@
+.navigation {
+    max-width: 1280px;
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 0.2s, opacity 0.2s linear;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+}
+
+.navigation_open {
+    max-width: 1280px;
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transition: visibility 0.2s, opacity 0.2s linear;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    overflow-Y: auto;
+}
+
+.navigation__container {
+    width: 520px;
+    height: 1024px;
+    margin: 0 auto 0 auto;
+    background-color: #202020;
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+    transition: visibility 0.2s, opacity 0.2s linear;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: auto;
+    right: 0;
+    z-index: 1;
+}
+
+.navigation__overlay {
+    margin: auto auto 0 auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    width: 100%;
+    min-height: 134vh;
+    position: absolute;
+}
+
+.navigation__button {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    margin: 22px 22px 105px auto;
+    background-color: #202020;
+    border: none;
+
+}
+
+.navigation__button:hover {
+    cursor: pointer;
+    transition: 0.5s;
+    opacity: 0.7;
+}
+
+.navigation__image {
+    padding: 0;
+
+}
+
+.navigation__main {
+    margin: 0 auto 28px auto;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.navigation__main:hover {
+    transition: 0.5s;
+    opacity: 0.7;
+}
+
+.navigation__movies_border {
+    margin: 0 auto 28px auto;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #FFFFFF;
+}
+
+.navigation__movies_border:hover {
+    transition: 0.5s;
+    opacity: 0.7;
+}
+
+.navigation__movies {
+    margin: 0 auto 28px auto;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.navigation__movies:hover {
+    transition: 0.5s;
+    opacity: 0.7;
+}
+
+.navigation__saved-movies {
+    margin: 0 auto 621px auto;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.navigation__saved-movies:hover {
+    transition: 0.5s;
+    opacity: 0.7;
+}
+
+.navigation__saved-movies_border {
+    margin: 0 auto 615px auto;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #FFFFFF;
+}
+
+.navigation__saved-movies_border:hover {
+    transition: 0.5s;
+    opacity: 0.7;
+}
+
+.navigation__pfofile {
+    margin: 0 auto 90px auto;
+    padding: 8px 20px 8px 20px;
+    background-color: #313131;
+    border-radius: 20px;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 16px;
+    font-style: normal;
+    font-weight: normal;
+    justify-content: center;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+@media (max-width:519px) {
+    .navigation__container {
+        width: 320px;
+    }
+
+    .navigation__button {
+        margin: 13px 13px 100px auto;
+    }
+
+    .navigation__main {
+        margin: 0 auto 24px auto;
+    }
+
+    .navigation__movies_border {
+        margin: 0 auto 15px auto;
+        padding-bottom: 7px;
+    }
+
+    .navigation__movies {
+        margin: 0 auto 24px auto;
+    }
+
+    .navigation__saved-movies {
+        margin: 0 auto 444px auto;
+    }
+
+    .navigation__saved-movies_border {
+        margin: 0 auto 435px auto;
+        padding-bottom: 7px;
+    }
+
+    .navigation__pfofile {
+        margin: 0 auto 46px auto;
+    }
+}

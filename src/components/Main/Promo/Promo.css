@@ -9,7 +9,7 @@
 .promo__title {
     margin: 0;
     padding: 0;
-    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-family: Inter, 'Helvetica Neue', 'Arial', sans-serif;
     font-size: 50px;
     line-height: 58px;
     font-style: normal;
@@ -20,6 +20,7 @@
     padding-top: 184px;
     padding-bottom: 224px;
     margin: 0 auto 0 auto;
+    letter-spacing: -2px;
 }
 
 @media (max-width:850px) {
@@ -43,7 +44,8 @@
         padding-bottom: 246px;
         font-size: 31px;
         line-height: 39px;
-        margin: 0 10px 0 10px;
+        margin: 0;
+        letter-spacing: -1px;
     }
 
 

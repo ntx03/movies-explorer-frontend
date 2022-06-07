@@ -1,6 +1,11 @@
 .footer {
     width: 100%;
+    min-height: 22vh;
     background-color: #202020;
+}
+
+.footer_none {
+    display: none;
 }
 
 .footer__container {
@@ -66,12 +71,13 @@
 
 @media (max-width:850px) {
     .footer__line {
-        margin: 0 50px 20px 50px;
+        margin: 0 30px 20px 30px;
     }
 
     .footer__box {
-        margin: 0 50px 20px 50px;
+        margin: 0 30px 20px 30px;
     }
+
 }
 
 @media (max-width:450px) {
@@ -104,10 +110,16 @@
         margin-right: 0;
     }
 
+    .footer__link-container {
+        margin-top: 15px;
+    }
+
     .footer__year {
         text-align: center;
         margin-top: 18px;
         color: #8b8b8b;
+        font-size: 12px;
+        line-height: 15px;
     }
 }
 

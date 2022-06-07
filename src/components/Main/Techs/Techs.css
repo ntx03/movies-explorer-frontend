@@ -23,6 +23,7 @@
     padding-top: 100px;
     margin: 0 70px 0 70px;
     padding-bottom: 23px;
+    letter-spacing: -1px;
 }
 
 .techs__title-line {
@@ -42,6 +43,7 @@
     color: #FFFFFF;
     margin: 90px auto 26px auto;
     max-width: 600px;
+    letter-spacing: -2px;
 }
 
 .techs__text {
@@ -56,6 +58,7 @@
     max-width: 460px;
     margin: 0 auto 100px auto;
     text-align: center;
+    letter-spacing: -0.6px;
 }
 
 .techs__technologies-container {
@@ -79,6 +82,7 @@
     font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
     color: #FFFFFF;
     padding-top: 21px;
+    letter-spacing: -0.6px;
 }
 
 @media (max-width:850px) {
@@ -93,6 +97,9 @@
 
     .techs__text {
         margin: 0 auto 83px auto;
+        font-size: 12px;
+        line-height: 18px;
+        max-width: 400px;
     }
 
     .techs__technologies-container {
@@ -103,6 +110,8 @@
     .techs__technologies {
         width: 84px;
         height: 36px;
+        font-size: 12px;
+        line-height: 18px;
     }
 
     .techs__title-line {
@@ -119,8 +128,11 @@
 
 @media (max-width:450px) {
     .techs__title {
-        padding-top: 70px;
+        padding-top: 60px;
         margin: 0 18px 0 18px;
+        font-size: 18px;
+        line-height: 22px;
+        letter-spacing: -0.8px;
     }
 
     .techs__title-line {
@@ -128,13 +140,18 @@
     }
 
     .techs__title-technologies {
-        margin: 60px auto 22px auto;
+        margin: 61px auto 22px auto;
         font-size: 30px;
         line-height: 36px;
+        letter-spacing: -1px;
     }
 
     .techs__text {
-        margin: 0 auto 50px auto;
+        padding: 5px;
+        margin: 0 20px 45px 16px;
+        font-size: 11px;
+        line-height: 16px;
+        letter-spacing: -0.5px;
     }
 
     .techs__technologies-container {

@@ -20,6 +20,7 @@
     color: #FFFFFF;
     padding-top: 110px;
     margin: 0 70px 0 70px;
+    letter-spacing: -0.6px;
     padding-bottom: 23px;
 }
 
@@ -64,6 +65,7 @@
     font-weight: normal;
     color: #FFFFFF;
     margin-bottom: 26px;
+    letter-spacing: 0.2px;
 }
 
 .about-me__text {
@@ -120,6 +122,7 @@
         margin: 0 50px 0 50px;
         font-size: 22px;
         line-height: 27px;
+        padding-top: 90px;
     }
 
     .about-me__title-line {
@@ -198,7 +201,7 @@
         padding-top: 70px;
         font-size: 18px;
         line-height: 22px;
-        margin: 0 18px 0 18px;
+        margin: 0 18px 0 14px;
         padding-bottom: 28px;
     }
 
@@ -232,8 +235,11 @@
     .about-me__text {
         font-size: 11px;
         line-height: 16px;
-
         margin-right: 0;
+    }
+
+    .about-me__link {
+        margin-right: 26px;
     }
 
 

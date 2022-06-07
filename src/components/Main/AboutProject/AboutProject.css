@@ -24,6 +24,7 @@
     padding-top: 110px;
     margin: 0 70px 0 70px;
     padding-bottom: 23px;
+    letter-spacing: -1px;
 }
 
 .about-project__title-line {
@@ -58,6 +59,7 @@
     font-weight: normal;
     color: #FFFFFF;
     margin-bottom: 26px;
+    letter-spacing: -0.8px;
 }
 
 .about-project__card-text {
@@ -116,7 +118,8 @@
 .about-project__time-frontend_black {
     background-color: #202020;
     color: #8b8b8b;
-    margin-bottom: 110px;
+    margin-bottom: 100px;
+    padding-top: 15px;
 }
 
 @media (max-width:850px) {
@@ -126,6 +129,7 @@
 
     .about-project__title {
         margin: 0 50px 0 50px;
+        padding-top: 90px;
     }
 
     .about-project__text-container {
@@ -135,6 +139,12 @@
 
     .about-project__time {
         margin: 0 50px 0 50px;
+        grid-template-columns: 1.08fr 4fr;
+    }
+
+    .about-project__card-text {
+        font-size: 12px;
+        line-height: 18px;
     }
 
     .about-project__card {
@@ -142,27 +152,26 @@
     }
 
     .about-project__time-frontend_black {
-        margin-bottom: 90px;
+        margin-bottom: 83px;
     }
 }
 
 @media (max-width:450px) {
     .about-project__title-line {
         margin: 0 18px 0 18px;
+
     }
 
     .about-project__title {
-        margin: 0 18px 0 18px;
+        margin: 0 18px 5px 18px;
         padding-top: 70px;
+        font-size: 18px;
+        line-height: 22px;
     }
 
     .about-project__text-container {
         flex-direction: column;
         margin: 60px 18px 0 18px;
-    }
-
-    .about-project__time {
-        margin: 0 18px 0 18px;
     }
 
     .about-project__card {
@@ -187,6 +196,21 @@
     }
 
     .about-project__time {
-        grid-template-columns: 1fr 2fr;
+        margin: 0 18px 0 18px;
+        grid-template-columns: 1.1fr 2fr;
+    }
+
+    .about-project__time-backend {
+        font-size: 11px;
+        line-height: 13px;
+        padding-top: 11px;
+        padding-bottom: 11px;
+    }
+
+    .about-project__time-frontend {
+        font-size: 11px;
+        line-height: 13px;
+        padding-top: 11px;
+        padding-bottom: 11px;
     }
 }

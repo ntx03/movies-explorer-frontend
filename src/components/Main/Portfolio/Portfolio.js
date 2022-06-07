@@ -17,7 +17,7 @@ function Portfolio() {
                     <Link to={'https://github.com/ntx03'} className='portfolio__link-project'>Адаптивный сайт</Link>
                     <Link to={'https://github.com/ntx03'} className='portfolio__link'><img src={arrow} alt="фото Качур Андрея" className='portfolio__arrow' /></Link>
                 </div>
-                <div className='portfolio__line'></div>
+                <div className='portfolio__line portfolio__line_last'></div>
                 <div className='portfolio__box-item'>
                     <Link to={'https://github.com/ntx03'} className='portfolio__link-project'>Одностраничное приложение</Link>
                     <Link to={'https://github.com/ntx03'} className='portfolio__link'><img src={arrow} alt="фото Качур Андрея" className='portfolio__arrow' /></Link>

@@ -46,6 +46,34 @@
     background-color: #222222;
 }
 
+.card__heard_none {
+    display: none;
+}
+
+.card__heard:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+.card__heard_black {
+    width: 14px;
+    height: 12px;
+    background-image: url('../../../images/like_black.svg');
+    border: none;
+    background-color: #222222;
+}
+
+.card__heard_black_none {
+    display: none;
+}
+
+.card__heard_black:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
 .card__time-movie {
     padding: 0;
     margin: 0;
@@ -57,4 +85,24 @@
     font-weight: normal;
     margin: 0 auto 16px 17px;
 
+}
+
+.card__delete {
+    width: 7px;
+    height: 17px;
+    background-image: url('../../../images/card_delete.svg');
+    border: none;
+    background-color: #222222;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.card_delete:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+.card__delete_none {
+    display: none;
 }

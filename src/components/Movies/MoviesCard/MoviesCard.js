@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './MoviesCard.css';
 import image from '../../../images/image_card.svg';
-import likeRed from '../../../images/likered.svg';
 
-function MoviesCard() {
+function MoviesCard({ movie }) {
+
+    const [like, setLike] = useState(false);
+
+    function likeClick() {
+        if (!like) {
+            setLike(true);
+        } else { setLike(false) }
+    }
     return (
         <div className='card'>
             <div className="card__image-container">
@@ -11,7 +18,8 @@ function MoviesCard() {
             </div>
             <div className="card__title-container">
                 <h2 className="card__title">33 слова о дизайне</h2>
-                <button className='card__heard' type="button" aria-label="лайк карточки"></button>
+                <button className={movie ? 'card__heard_none' : (like ? 'card__heard' : 'card__heard_black')} type="button" onClick={likeClick} aria-label="лайк карточки"></button>
+                <button className={movie ? 'card__delete' : 'card__delete_none'} type="button" aria-label="значок удаления карточки"></button>
             </div>
             <div className='card__time-movie'>1ч 47м</div>
         </div>
