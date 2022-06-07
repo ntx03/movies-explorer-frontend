@@ -64,7 +64,7 @@ function App() {
           <Route path='/saved-movies' element={<SavedMovies loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} isOpen={navigation} />} />
           <Route path='/*' element={<NotFound />} />
         </Routes>
-        <Navigation isOpen={navigation} isClose={closeNavigationMenu} />
+        <Navigation isOpen={navigation} movie={movie} isClose={closeNavigationMenu} />
       </div>
 
     </div>

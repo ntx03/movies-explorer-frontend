@@ -12,7 +12,6 @@ function MoviesCardList({ movie }) {
                     <MoviesCard movie={movie} />
                     <MoviesCard movie={movie} />
                     <MoviesCard movie={movie} />
-                    <MoviesCard movie={movie} />
                 </div>
             </div>
         </div>

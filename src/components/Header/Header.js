@@ -21,7 +21,7 @@ function Header({ loggedIn, movie, movieSave, onClick }) {
                     </div>
                 </div>
                 <Link to='/profile' className={loggedIn ? 'header__account' : 'header__account_none'}>Аккаунт</Link>
-                <button className={loggedIn ? 'header__button' : 'header__button_none'}><img className={loggedIn ? '' : 'header__button_none'} onClick={onClick} src={button} alt='кнопка открытия меню' /></button>
+                <button className={loggedIn ? 'header__button' : 'header__button_none'}><img className={loggedIn ? 'header__button-image' : 'header__button_none'} onClick={onClick} src={button} alt='кнопка открытия меню' /></button>
 
             </div>
         </div >

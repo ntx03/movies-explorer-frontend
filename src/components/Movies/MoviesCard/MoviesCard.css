@@ -41,9 +41,11 @@
 .card__heard {
     width: 14px;
     height: 12px;
+    padding-right: 15px;
     background-image: url('../../../images/likered.svg');
     border: none;
     background-color: #222222;
+    background-repeat: no-repeat;
 }
 
 .card__heard_none {
@@ -59,9 +61,11 @@
 .card__heard_black {
     width: 14px;
     height: 12px;
+    padding-right: 15px;
     background-image: url('../../../images/like_black.svg');
     border: none;
     background-color: #222222;
+    background-repeat: no-repeat;
 }
 
 .card__heard_black_none {
@@ -105,4 +109,34 @@
 
 .card__delete_none {
     display: none;
+}
+
+@media (max-width:850px) {
+    .card__title-container {
+        margin: 16px 16px 14px 16px;
+    }
+}
+
+
+@media (max-width:450px) {
+    .card__title {
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .card__title-container {
+        margin: 16px 16px 14px 14px;
+    }
+
+    .card__time-movie {
+        margin: 0 auto 12px 14px;
+    }
+
+    .card__heard {
+        padding-right: 10px;
+    }
+
+    .card__heard_black {
+        padding-right: 10px;
+    }
 }

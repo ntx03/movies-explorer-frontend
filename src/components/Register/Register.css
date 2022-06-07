@@ -58,7 +58,7 @@
     border: none;
     padding-left: 15px;
     outline: none;
-    margin: 10px auto 10px auto;
+    margin: 0 auto 10px auto;
 }
 
 .register__name-error-container {
@@ -170,7 +170,7 @@
     }
 
     .register__title {
-        margin: 0 auto 70px auto;
+        margin: 146px auto 70px auto;
     }
 
     .pegister__input {
@@ -188,7 +188,7 @@
     }
 
     .register__name-error-container {
-        margin-bottom: 157px;
+        margin-bottom: 159px;
     }
 
     .register__signin-text {

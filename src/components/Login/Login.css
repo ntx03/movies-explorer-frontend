@@ -58,7 +58,7 @@
     border: none;
     padding-left: 15px;
     outline: none;
-    margin: 10px auto 10px auto;
+    margin: 0 auto 10px auto;
 }
 
 .login__name-error-container {
@@ -173,7 +173,7 @@
         margin: 0 auto 70px auto;
     }
 
-    .pegister__input {
+    .login__input {
         width: 245px;
     }
 
@@ -188,7 +188,7 @@
     }
 
     .login__name-error-container {
-        margin-bottom: 157px;
+        margin-bottom: 245px;
     }
 
     .login__signin-text {
