@@ -146,6 +146,10 @@
         letter-spacing: -1px;
     }
 
+    .techs-container {
+        background-color: #202020;
+    }
+
     .techs__text {
         padding: 5px;
         margin: 0 20px 45px 16px;

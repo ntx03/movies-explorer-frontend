@@ -54,6 +54,12 @@
     border: none;
 }
 
+.search-form__button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.5s;
+}
+
 input[type="search"]::-webkit-search-cancel-button {
     display: none;
 }
