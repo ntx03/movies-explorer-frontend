@@ -6,7 +6,7 @@ import Kachur from '../../../images/Kachur.jpg';
 function AboutMe() {
 
     return (
-        <div className='about-me'>
+        <div className='about-me' id='aboutMe'>
             <div className='about-me__box'>
                 <div className='about-me__title'>Студент</div>
                 <div className='about-me__title-line'></div>
