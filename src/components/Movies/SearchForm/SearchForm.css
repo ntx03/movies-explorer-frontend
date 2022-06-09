@@ -86,13 +86,10 @@ input[type="search"]::-webkit-search-cancel-button {
     transform: translate(-50%, -50%);
 }
 
-<<<<<<< HEAD
-=======
 .search-form__checkbox:hover {
     cursor: pointer;
 }
 
->>>>>>> 02e2f75c097a3b485a688ad6ffeacd75e8fcb373
 input[type='checkbox'] {
     position: relative;
     width: 36px;
