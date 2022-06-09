@@ -7,21 +7,24 @@ import Techs from './Techs/Techs';
 import AboutMe from './AboutMe/AboutMe';
 import Portfolio from './Portfolio/Portfolio';
 import { Route, Routes } from 'react-router-dom';
+import { Scrollchor } from 'react-scrollchor';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
 
-function Main({ loggedIn, movie, movieSave }) {
+function Main(props) {
+
+
     return (
         <section className='main'>
-            <Header loggedIn={loggedIn} movie={movie} movieSave={movieSave} />
+            <Header loggedIn={props.loggedIn} movie={props.movie} movieSave={props.movieSave} />
             <Promo />
             <NavTab />
             <AboutProject />
-            <Techs />
-            <AboutMe />
+            <Techs id='about' />
+            <AboutMe id='faq-1' />
             <Portfolio />
-            <Footer />
+            <Footer id='ap' />
         </section>
     );
 }
