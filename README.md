@@ -1,1 +1,3 @@
-# movies-explorer-frontend
+# Макет figma сервиса по поиску фильмов Качур Андрея
+
+Сслылка на макет figma моего диплома лежит по этому адресу: https://disk.yandex.ru/d/k3b40z5AZV3c8Q.
