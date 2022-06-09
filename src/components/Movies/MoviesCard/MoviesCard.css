@@ -1,0 +1,142 @@
+.card {
+    max-width: 100%;
+    background-color: #222222;
+    display: flex;
+    flex-direction: column;
+}
+
+.card__image-container {
+    width: 100%;
+    position: relative;
+    padding-top: 56%;
+}
+
+.card__image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+}
+
+.card__title-container {
+    margin: 16px 16px 17px 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.card__title {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 13px;
+    line-height: 17px;
+    color: #FFFFFF;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.card__heard {
+    width: 14px;
+    height: 12px;
+    padding-right: 15px;
+    background-image: url('../../../images/likered.svg');
+    border: none;
+    background-color: #222222;
+    background-repeat: no-repeat;
+}
+
+.card__heard_none {
+    display: none;
+}
+
+.card__heard:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+.card__heard_black {
+    width: 14px;
+    height: 12px;
+    padding-right: 15px;
+    background-image: url('../../../images/like_black.svg');
+    border: none;
+    background-color: #222222;
+    background-repeat: no-repeat;
+}
+
+.card__heard_black_none {
+    display: none;
+}
+
+.card__heard_black:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+.card__time-movie {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 11px;
+    line-height: 13px;
+    color: #8b8b8b;
+    font-style: normal;
+    font-weight: normal;
+    margin: 0 auto 16px 17px;
+
+}
+
+.card__delete {
+    width: 7px;
+    height: 17px;
+    background-image: url('../../../images/card_delete.svg');
+    border: none;
+    background-color: #222222;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.card_delete:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+.card__delete_none {
+    display: none;
+}
+
+@media (max-width:850px) {
+    .card__title-container {
+        margin: 16px 16px 14px 16px;
+    }
+}
+
+
+@media (max-width:450px) {
+    .card__title {
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .card__title-container {
+        margin: 16px 16px 14px 14px;
+    }
+
+    .card__time-movie {
+        margin: 0 auto 12px 14px;
+    }
+
+    .card__heard {
+        padding-right: 10px;
+    }
+
+    .card__heard_black {
+        padding-right: 10px;
+    }
+}

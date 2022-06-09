@@ -1,0 +1,45 @@
+.preloader {
+    width: 100%;
+    background-color: #202020;
+}
+
+.preloader__container {
+    max-width: 1280px;
+    display: flex;
+    margin: 0 auto 0 auto;
+}
+
+.pleloader__button {
+    margin: 55px auto 80px auto;
+    width: 320px;
+    height: 36px;
+    background-color: #202020;
+    border: #424242 1px solid;
+    border-radius: 10px;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 12px;
+    line-height: 15px;
+    font-style: normal;
+    font-weight: 500;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.pleloader__button:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+@media (max-width:850px) {
+    .pleloader__button {
+        margin: 49px auto 80px auto;
+    }
+}
+
+
+@media (max-width:450px) {
+    .pleloader__button {
+        width: 240px;
+    }
+}
