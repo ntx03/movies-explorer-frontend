@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { useState, useEffect } from "react";
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Main from '../Main/Main';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
@@ -11,11 +11,16 @@ import { useLocation } from 'react-router-dom';
 import Movies from '../Movies/Movies';
 import Navigation from '../Navigation/Navigation';
 import SavedMovies from '../SavedMovies/SavedMovies';
+import { register, authorize, getContent } from '../../utils/auth';
+import api from '../../utils/MainApi';
+import CurrentUserContext from '../../contexts/currentUserContext';
+
+import ProtectedRoute from '../ProtectedRoute';
 
 function App() {
-
-  // хук useLocation();
   let location = useLocation();
+
+  const navigate = useNavigate();
 
   // проверка регистрации
   const [loggedIn, setLoggedIn] = useState(false);
@@ -29,45 +34,155 @@ function App() {
   // открытие попапа навигации
   const [navigation, setNavigation] = useState(false);
 
+  //ошибка при регистрации email
+  const [registerErrorEmail, setRegisterErrorEmail] = useState(false);
+
+  // ошибка при регистрации общая
+  const [registerError, setRegisterError] = useState(false);
+
+  // общая ошибка при авторизации
+  const [loginError, setLoginError] = useState(false);
+
+  // ошибка при вводе данных
+  const [loginErrorAuthorize, setLoginErrorAuthorize] = useState(false);
+
+  //ошибка при обновлении профиля
+  const [errorUpdate, setErrorUpdate] = useState(false);
+
+  //ошибка при обновлении профиля (email уже существует)
+  const [errorEmailUpdate, setErrorEmailUpdate] = useState(false);
+
+  // данный пользователя
+  const [currentUser, setCurrentUser] = useState({});
+
   useEffect(() => {
-    if (location.pathname === '/') {
-      setLoggedIn(false);
-    }
     if (location.pathname === '/movies') {
-      setLoggedIn(true); setMovie(false); setMovieSave(true);
-    }
-    if (location.pathname === '/profile') {
-      setLoggedIn(true);
+      setMovie(false); setMovieSave(true);
     }
     if (location.pathname === '/saved-movies') {
-      setLoggedIn(true); setMovie(true); setMovieSave(false);
+      setMovie(true); setMovieSave(false);
     }
-  })
+  }, [location.pathname])
 
+  // проверка токена при входе на сайт
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        getContent(token)
+          .then((res) => {
+            if (res) {
+              setCurrentUser(res);
+              setLoggedIn(true);
+              setErrorUpdate(false);
+              navigate('/movies');
+            }
+          })
+          .catch((e) => console.log(e.message))
+      }
+    }
+  }, [])
+
+  // открываем меню навигации
   function openNavigationMenu() {
     setNavigation(true);
   }
-
+  // закрываем меню навигации
   function closeNavigationMenu() {
     setNavigation(false);
   }
 
+  // регистрируем пользователя
+  function onRegister(password, email, name) {
+    register(password, email, name)
+      .then((res) => {
+        //setIsInfoTooltipOpen(true);
+        if (res === 409) {
+          setRegisterErrorEmail(true);
+          setRegisterError(false);
+        } else {
+          navigate('/signin');
+          setRegisterErrorEmail(false);
+        }
+      })
+      .catch(() => {
+        setRegisterErrorEmail(true);
+        setRegisterError(true);
+      });
+  }
+  // проходим авторизацию
+  function onLogin(password, email) {
+    authorize(password, email)
+      .then((res) => {
+        //setIsInfoTooltipOpen(true);
+        if (res === 401) {
+          setLoginErrorAuthorize(true);
+          setLoggedIn(false);
+          setLoginError(false);
+        } else {
+          navigate('/movies');
+          setLoggedIn(true);
+        }
+      })
+      .catch(() => {
+        setLoginErrorAuthorize(true);
+        setLoginError(true);
+        setLoggedIn(false);
+      });
+  }
+  // выходим из профиля
+  function logOut() {
+    navigate('/');
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+  }
+
+  // обновление профиля
+  function updateUser(name, email) {
+    api.patchUser({ name, email })
+      .then((res) => {
+        //setIsInfoTooltipOpen(true);
+        if (res) {
+          navigate('/movies');
+          setErrorUpdate(false);
+        }
+      })
+      .catch((err) => {
+        if (err === 'Ошибка: 409') {
+          setErrorUpdate(true);
+          setErrorEmailUpdate(true);
+        } else {
+          setErrorUpdate(true);
+          setErrorEmailUpdate(false);
+        }
+      });
+  }
+
+
   return (
-    <div className='app'>
+    <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Routes>
-          <Route path='/' element={<Main loggedIn={loggedIn} movie={movie} movieSave={movieSave} />} />
-          <Route path='/movies' element={<Movies loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} isOpen={navigation} />} />
-          <Route path='/profile' element={<Profile loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} />} />
-          <Route path='/signup' element={<Register />} />
-          <Route path='/signin' element={<Login />} />
-          <Route path='/saved-movies' element={<SavedMovies loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} isOpen={navigation} />} />
+          <Route path='/' element={<Main loggedIn={loggedIn} movie={movie} movieSave={movieSave} errorRegisterEmail={() => setRegisterErrorEmail(false)} errorloginAuthorize={() => setLoginErrorAuthorize(false)} />} />
+          <Route path='/movies' element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Movies loggedIn={loggedIn} movie={movie} movieSave={movieSave} isOpen={navigation} onClick={openNavigationMenu} />
+            </ProtectedRoute>} />
+          <Route path='/profile' element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Profile loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} logOut={logOut} setErrorUpdate={setErrorUpdate} updateUser={updateUser} errorUpdate={errorUpdate} errorEmailUpdate={errorEmailUpdate} />
+            </ProtectedRoute>} />
+          <Route path='/saved-movies' element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <SavedMovies loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} isOpen={navigation} />
+            </ProtectedRoute>} />
+          <Route path='/signup' element={<Register onRegister={onRegister} errorRegisterEmail={registerErrorEmail} errorRegister={registerError} />} />
+          <Route path='/signin' element={<Login onLogin={onLogin} loginErrorAuthorize={loginErrorAuthorize} loginError={loginError} />} />
           <Route path='/*' element={<NotFound />} />
         </Routes>
-        <Navigation isOpen={navigation} movie={movie} isClose={closeNavigationMenu} />
+        <Navigation isOpen={navigation} movie={movie} isClose={closeNavigationMenu} goToMain={() => { setLoggedIn(false); setNavigation(false); }} />
       </div>
-
-    </div>
+    </CurrentUserContext.Provider>
   );
 }
 

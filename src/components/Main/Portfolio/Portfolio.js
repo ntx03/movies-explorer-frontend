@@ -1,7 +1,6 @@
 import React from 'react';
 import './Portfolio.css';
 import arrow from '../../../images/text__COLOR_font-main.svg';
-import { a } from 'react-router-dom';
 
 function Portfolio() {
     return (
