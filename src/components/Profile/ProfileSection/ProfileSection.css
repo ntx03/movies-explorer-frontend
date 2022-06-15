@@ -53,6 +53,19 @@
     text-align: end;
 }
 
+.profile__input-error {
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 11px;
+    line-height: 13px;
+    font-style: normal;
+    font-weight: normal;
+    color: #EE3465;
+    background-color: #202020;
+    border: none;
+    outline: none;
+    text-align: end;
+}
+
 .profile__line {
     max-width: 410px;
     margin: 6px 0 0 0;
@@ -214,7 +227,7 @@
     line-height: 17px;
     font-style: normal;
     font-weight: normal;
-    color: #000000;
+    color: #c2c2c2;
     text-align: center;
     width: 410px;
     height: 45px;
