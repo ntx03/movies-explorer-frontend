@@ -22,6 +22,18 @@ class Api {
             .then(this._checkError);
     }
 
+    //получаем информацию о пользователе
+    getMovies() {
+        return fetch('https://back.kachur.nomoreparties.sbs/movies', {
+            method: 'GET',
+            headers: {
+                'authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(this._checkError);
+    }
+
     //обновляем пользователя
     patchUser({ name, email }) {
         const newConfing = {
@@ -36,8 +48,8 @@ class Api {
             .then(this._checkError);
     }
 
-    // удаляем карточку
-    removeCard(cardId) {
+    // удаляем фильм из базы
+    removeMovie(movieId) {
         const newConfing = {
             headers: {
                 'authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -45,59 +57,60 @@ class Api {
             },
             method: 'DELETE',
         }
-        return fetch(`https://back.kachur.nomoreparties.sbs/cards/${cardId}`, newConfing)
-            .then(this._checkError);
-    }
-
-    // ставим и удаляем лайк 
-    changeLikeCardStatus(cardId, isLiked) {
-        const updateLike = {
-            headers: {
-                'authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json',
-            },
-            method: 'PUT',
-        }
-
-        const deleteLike = {
-            headers: {
-                'authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json',
-            },
-            method: 'DELETE',
-        }
-        return fetch(`https://back.kachur.nomoreparties.sbs/cards/${cardId}/likes`, isLiked ? deleteLike : updateLike)
-            .then(this._checkError);
-    }
-
-    // отправляем информацию 
-    patchProfileInfo(userData) {
-        const newConfing = {
-            method: 'PATCH',
-            headers: {
-                'authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        }
-        return fetch('https://back.kachur.nomoreparties.sbs/users/me', newConfing)
+        return fetch(`https://back.kachur.nomoreparties.sbs/movies/${movieId}`, newConfing)
             .then(this._checkError);
     }
 
     //создаем новую карточку
-    patchCard(inputsValue) {
+    patchMovie(dataMovie) {
         const newConfing = {
             method: 'POST',
             headers: {
                 'authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(inputsValue),
-
+            body: JSON.stringify(dataMovie),
         }
-        return fetch('https://back.kachur.nomoreparties.sbs/cards', newConfing)
+        return fetch('https://back.kachur.nomoreparties.sbs/movies', newConfing)
             .then(this._checkError);
     }
+
+    // ставим лайк 
+    /* changeLikeCardStatus(cardId, isLiked) {
+         const updateLike = {
+             headers: {
+                 'authorization': `Bearer ${localStorage.getItem('token')}`,
+                 'Content-Type': 'application/json',
+             },
+             method: 'PUT',
+         }
+ 
+         const deleteLike = {
+             headers: {
+                 'authorization': `Bearer ${localStorage.getItem('token')}`,
+                 'Content-Type': 'application/json',
+             },
+             method: 'DELETE',
+         }
+         return fetch(`https://back.kachur.nomoreparties.sbs/cards/${cardId}/likes`, isLiked ? deleteLike : updateLike)
+             .then(this._checkError);
+     }
+ 
+     // отправляем информацию 
+     patchProfileInfo(userData) {
+         const newConfing = {
+             method: 'PATCH',
+             headers: {
+                 'authorization': `Bearer ${localStorage.getItem('token')}`,
+                 'Content-Type': 'application/json',
+             },
+             body: JSON.stringify(userData),
+         }
+         return fetch('https://back.kachur.nomoreparties.sbs/users/me', newConfing)
+             .then(this._checkError);
+     }*/
+
+
 }
 
 export default new Api({

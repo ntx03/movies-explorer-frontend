@@ -14,8 +14,9 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import { register, authorize, getContent } from '../../utils/auth';
 import api from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/currentUserContext';
-import { getMovies } from '../../utils/MoviesApi';
+import { getMoviesNomoreparties } from '../../utils/MoviesApi';
 import ProtectedRoute from '../ProtectedRoute';
+import Preloader from '../Preloader/Preloader';
 
 function App() {
   let location = useLocation();
@@ -54,64 +55,91 @@ function App() {
 
   // данный пользователя
   const [currentUser, setCurrentUser] = useState({});
-  // фильмы
+
+  // фильмы c общего сервера
   const [movies, setMovies] = useState();
+
+  // фильмы с нашего сервера
+  const [saveMovies, setSaveMovies] = useState();
+
+  // управление компонентом More
+  const [more, setMore] = useState(false);
+
+
 
   useEffect(() => {
     if (location.pathname === '/movies') {
       setMovie(false); setMovieSave(true);
-      const token = localStorage.getItem('token');
-      if (token) {
-        getContent(token)
-          .then((res) => {
-            if (res) {
-              setCurrentUser(res);
-            }
-          })
-          .catch((e) => console.log(e.message))
-
-      }
     }
     if (location.pathname === '/saved-movies') {
       setMovie(true); setMovieSave(false);
+      api.getMovies()
+        .then((c) => {
+          setSaveMovies(c.filter(c => c.owner === currentUser._id));
+          console.log(c.filter(c => c.owner === currentUser._id));
+        })
+        .catch((e) => { console.log(e.message) })
     }
   }, [location.pathname])
 
-  // проверка токена при входе на сайт
   useEffect(() => {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
+      const movies = localStorage.getItem('movies');
       if (token) {
-        getContent(token)
-          .then((res) => {
+        Promise.all([getContent(token), api.getMovies()])
+          .then(([res, c]) => {
             if (res) {
+              setCurrentUser(res);
               setLoggedIn(true);
               setErrorUpdate(false);
+              navigate('/movies');
+              setMovies([]);
             }
-          })
-          .catch((e) => console.log(e.message))
-        getMovies()
-          .then((item) => {
-            setMovies(item)
-            console.log(item)
-            navigate('/movies');
+            setSaveMovies(c.filter(c => c.owner === currentUser._id));
+            console.log(c.filter(c => c.owner === currentUser._id));
           })
           .catch((e) => console.log(e.message))
       }
     }
-
   }, [loggedIn])
 
-  /*// берем карточки с сервера
-    useEffect(() => {
-      getMovies()
-        .then((item) => {
-          setMovies(item)
-          console.log(item)
-        })
-        .catch((e) => console.log(e.message))
+  // проверка токена при входе на сайт
+  /* useEffect(() => {
+     if (localStorage.getItem('token')) {
+       const token = localStorage.getItem('token');
+       if (token) {
+         getContent(token)
+           .then((res) => {
+             if (res) {
+               setCurrentUser(res);
+               setLoggedIn(true);
+               setErrorUpdate(false);
+               getMoviesNomoreparties()
+                 .then((item) => {
+                   setMovies(item)
+                   console.log(item);
+                   api.getMovies()
+                     .then((c) => {
+                       setSaveMovies(c.filter(c => c.owner === currentUser._id));
+                       console.log(c.filter(c => c.owner === currentUser._id));
+                       navigate('/movies');
+                     })
+                     .catch((e) => console.log(e.message))
+                 })
+                 .catch((e) => console.log(e.message))
+             }
+           })
+           .catch((e) => console.log(e.message))
+       }
+     }
+   }, [loggedIn])*/
+
+  // берем сохраненные карточки с сервера
+  /*  useEffect(() => {
   
-    }, [])*/
+  
+    }, [loggedIn, movie])*/
 
   // открываем меню навигации
   function openNavigationMenu() {
@@ -126,7 +154,6 @@ function App() {
   function onRegister(password, email, name) {
     register(password, email, name)
       .then((res) => {
-        //setIsInfoTooltipOpen(true);
         if (res === 409) {
           setRegisterErrorEmail(true);
           setRegisterError(false);
@@ -153,6 +180,7 @@ function App() {
         } else {
           navigate('/movies');
           setLoggedIn(true);
+          setMovies([]);
         }
       })
       .catch(() => {
@@ -170,9 +198,12 @@ function App() {
 
   // обновление профиля
   function updateUser(name, email) {
+    setCurrentUser({
+      name: name,
+      email: email
+    })
     api.patchUser({ name, email })
       .then((res) => {
-        //setIsInfoTooltipOpen(true);
         if (res) {
           navigate('/movies');
           setErrorUpdate(false);
@@ -188,6 +219,15 @@ function App() {
         }
       });
   }
+  // удаление карточки
+  function handleMovieDelete(movie) {
+    api.removeMovie(movie._id)
+      .then(() => {
+        setSaveMovies(state => state.filter(c => c._id !== movie._id))
+      })
+      .catch(err => console.log(err));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -195,7 +235,7 @@ function App() {
           <Route path='/' element={<Main loggedIn={loggedIn} movie={movie} movieSave={movieSave} errorRegisterEmail={() => setRegisterErrorEmail(false)} errorloginAuthorize={() => setLoginErrorAuthorize(false)} />} />
           <Route path='/movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <Movies loggedIn={loggedIn} movies={movies} movie={movie} movieSave={movieSave} isOpen={navigation} onClick={openNavigationMenu} />
+              <Movies loggedIn={loggedIn} more={more} movies={movies} movie={movie} movieSave={movieSave} isOpen={navigation} saveMovies={saveMovies} onClick={openNavigationMenu} />
             </ProtectedRoute>} />
           <Route path='/profile' element={
             <ProtectedRoute loggedIn={loggedIn}>
@@ -203,13 +243,14 @@ function App() {
             </ProtectedRoute>} />
           <Route path='/saved-movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <SavedMovies loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} isOpen={navigation} />
+              <SavedMovies loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} isOpen={navigation} saveMovies={saveMovies} movies={movies} handleMovieDelete={handleMovieDelete} />
             </ProtectedRoute>} />
           <Route path='/signup' element={<Register onRegister={onRegister} errorRegisterEmail={registerErrorEmail} errorRegister={registerError} />} />
           <Route path='/signin' element={<Login onLogin={onLogin} loginErrorAuthorize={loginErrorAuthorize} loginError={loginError} />} />
           <Route path='/*' element={<NotFound />} />
         </Routes>
         <Navigation isOpen={navigation} movie={movie} isClose={closeNavigationMenu} goToMain={() => { setLoggedIn(false); setNavigation(false); }} />
+
       </div>
     </CurrentUserContext.Provider>
   );

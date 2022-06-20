@@ -3,6 +3,10 @@
     background-color: #202020;
 }
 
+.more_none {
+    display: none;
+}
+
 .more__container {
     max-width: 1280px;
     display: flex;
