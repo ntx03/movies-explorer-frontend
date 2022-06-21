@@ -64,9 +64,17 @@ function App() {
 
   // управление компонентом More
   const [more, setMore] = useState(false);
-  // управление чекбоксом короткометражек
-  const [checked, setChecked] = React.useState(false);
 
+  // управление чекбоксом короткометражек в фильмах
+  const [checked, setChecked] = useState(false);
+
+  // управление чекбоксом короткометражек в сохраненных фильмах
+  const [saveChecked, setSaveChecked] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('checked', checked);
+    localStorage.setItem('savechecked', saveChecked);
+  }, [checked, saveChecked])
 
   useEffect(() => {
     if (location.pathname === '/movies') {
@@ -77,7 +85,10 @@ function App() {
       api.getMovies()
         .then((c) => {
           setSaveMovies(c.filter(c => c.owner === currentUser._id));
-          console.log(c.filter(c => c.owner === currentUser._id));
+          localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
+          if (saveChecked) {
+            setSaveMovies(saveMovies.filter(i => i.duration <= 40));
+          } else setSaveMovies()
         })
         .catch((e) => { console.log(e.message) })
     }
@@ -86,8 +97,17 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
-      const movies = localStorage.getItem('movies');
-      const checked = localStorage.getItem('checked');
+      const moviesStorage = localStorage.getItem('movies');
+      const checkedMovies = localStorage.getItem('checked');
+      const checkedSaveMovies = localStorage.getItem('savechecked');
+      const search = localStorage.getItem('search');
+
+      function movies() {
+        if (moviesStorage === (null || undefined || " ")) {
+          return []
+        } else return JSON.parse(moviesStorage);
+      }
+      console.log(movies());
       if (token) {
         Promise.all([getContent(token), api.getMovies()])
           .then(([res, c]) => {
@@ -95,12 +115,18 @@ function App() {
               setCurrentUser(res);
               setLoggedIn(true);
               setErrorUpdate(false);
+              setChecked(checkedMovies);
               navigate('/movies');
-              setMovies(JSON.parse(movies));
-              setChecked(checked);
+              console.log(movies());
+              if (checked) {
+                setMovies(movies());
+              } else setSaveMovies(movies())
+
             }
+            localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
+            //setSaveChecked(checkedSaveMovies);
+
             setSaveMovies(c.filter(c => c.owner === currentUser._id));
-            console.log(c.filter(c => c.owner === currentUser._id));
           })
           .catch((e) => console.log(e.message))
       }
@@ -138,15 +164,28 @@ function App() {
   function onLogin(password, email) {
     authorize(password, email)
       .then((res) => {
+        const token = localStorage.getItem('token');
         //setIsInfoTooltipOpen(true);
         if (res === 401) {
           setLoginErrorAuthorize(true);
           setLoggedIn(false);
           setLoginError(false);
         } else {
-          navigate('/movies');
-          setLoggedIn(true);
-          setMovies([]);
+          Promise.all([getContent(token), api.getMovies()])
+            .then(([res, c]) => {
+              if (res) {
+                setCurrentUser(res);
+                setLoggedIn(true);
+                setErrorUpdate(false);
+                navigate('/movies');
+                setMovies([]);
+                localStorage.setItem('movies', []);
+              }
+              localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
+              setSaveMovies([]);
+              console.log(c.filter(c => c.owner === currentUser._id));
+            })
+            .catch((e) => console.log(e.message))
         }
       })
       .catch(() => {
@@ -160,6 +199,7 @@ function App() {
     navigate('/');
     localStorage.removeItem('token', 'checked', 'search');
     localStorage.setItem('movies', []);
+    localStorage.setItem('savemovies', []);
     setLoggedIn(false);
   }
 
@@ -189,17 +229,27 @@ function App() {
   // удаление карточки
   function handleMovieDelete(movie) {
     api.removeMovie(movie._id)
-      .then(() => {
-        setSaveMovies(state => state.filter(c => c._id !== movie._id))
+      .then((res) => {
+        console.log(res);
+        console.log(saveMovies);
+        setSaveMovies(state => state.filter(c => c._id !== movie._id));
+        console.log(saveMovies.filter(c => c._id !== movie._id));
+        localStorage.setItem('savemovies', JSON.stringify(saveMovies.filter(c => c._id !== movie._id)));
       })
       .catch(err => console.log(err));
+
+
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Routes>
-          <Route path='/' element={<Main loggedIn={loggedIn} movie={movie} movieSave={movieSave} errorRegisterEmail={() => setRegisterErrorEmail(false)} errorloginAuthorize={() => setLoginErrorAuthorize(false)} />} />
+          <Route path='/' element={<Main loggedIn={loggedIn}
+            movie={movie}
+            movieSave={movieSave}
+            errorRegisterEmail={() => setRegisterErrorEmail(false)}
+            errorloginAuthorize={() => setLoginErrorAuthorize(false)} />} />
           <Route path='/movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
               <Movies loggedIn={loggedIn}
@@ -216,11 +266,29 @@ function App() {
             </ProtectedRoute>} />
           <Route path='/profile' element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <Profile loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} logOut={logOut} setErrorUpdate={setErrorUpdate} updateUser={updateUser} errorUpdate={errorUpdate} errorEmailUpdate={errorEmailUpdate} />
+              <Profile loggedIn={loggedIn}
+                movie={movie}
+                movieSave={movieSave}
+                onClick={openNavigationMenu}
+                logOut={logOut}
+                setErrorUpdate={setErrorUpdate}
+                updateUser={updateUser}
+                errorUpdate={errorUpdate}
+                errorEmailUpdate={errorEmailUpdate} />
             </ProtectedRoute>} />
           <Route path='/saved-movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <SavedMovies loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={openNavigationMenu} isOpen={navigation} saveMovies={saveMovies} movies={movies} handleMovieDelete={handleMovieDelete} />
+              <SavedMovies loggedIn={loggedIn}
+                movie={movie}
+                movieSave={movieSave}
+                onClick={openNavigationMenu}
+                isOpen={navigation}
+                saveMovies={saveMovies}
+                movies={movies}
+                handleMovieDelete={handleMovieDelete}
+                setSaveMovies={setSaveMovies}
+                checked={saveChecked}
+                setChecked={setSaveChecked} />
             </ProtectedRoute>} />
           <Route path='/signup' element={<Register onRegister={onRegister} errorRegisterEmail={registerErrorEmail} errorRegister={registerError} />} />
           <Route path='/signin' element={<Login onLogin={onLogin} loginErrorAuthorize={loginErrorAuthorize} loginError={loginError} />} />

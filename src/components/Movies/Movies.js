@@ -12,7 +12,7 @@ function Movies({ loggedIn, movie, movieSave, onClick, isOpen, movies, saveMovie
     return (
         <section className={isOpen ? 'movies_noScroll' : 'movies'}>
             <Header loggedIn={loggedIn} movie={movie} movieSave={movieSave} onClick={onClick} />
-            <SearchForm setMovies={setMovies} movies={movies} checked={checked} setChecked={setChecked} />
+            <SearchForm setMovies={setMovies} movies={movies} checked={checked} setChecked={setChecked} movie={movie} />
             <Preloader />
             <MoviesCardList movie={movie} movies={movies} saveMovies={saveMovies} />
             <More more={more} />

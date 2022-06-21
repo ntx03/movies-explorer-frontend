@@ -1,13 +1,14 @@
 import React from 'react';
 import './SearchForm.css';
 import { getMoviesNomoreparties } from '../../../utils/MoviesApi';
+import api from '../../../utils/MainApi';
 
-function SearchForm({ setMovies, movies, checked, setChecked }) {
-
+function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies, setSaveMovies }) {
     const [search, setSearch] = React.useState('');
     const onChange = (e) => {
         setSearch(e.target.value)
     }
+    // состояние валидации кнопки найти
     const [validate, setValidate] = React.useState(false);
     // const [checked, setChecked] = React.useState(false);
 
@@ -17,12 +18,10 @@ function SearchForm({ setMovies, movies, checked, setChecked }) {
         if (search < 1) {
             setValidate(true);
         } else {
-            //  localStorage.setItem('checked', checked);
             localStorage.setItem('search', search);
             getMoviesNomoreparties()
                 .then((res) => {
                     const moviesFilter = res.filter((movie) => {
-
                         function noNull(i) {
                             if (i == null) {
                                 return 'неизвестно'
@@ -54,23 +53,76 @@ function SearchForm({ setMovies, movies, checked, setChecked }) {
                             noNull(movie.year).toUpperCase() == search.toUpperCase()
                     });
                     localStorage.setItem('movies', JSON.stringify(moviesFilter));
-                    setMovies(moviesFilter);
+                    if (checked) {
+                        setMovies(moviesFilter.filter(i => i.duration <= 40));
+                    } else { setMovies(JSON.parse(localStorage.getItem('movies'))) }
                     console.log(moviesFilter);
                 })
                 .catch((e) => { console.log(e.message) })
         }
     }
 
+    // Ищем короткометражки
     const checkedCheckbox = () => {
         console.log(checked);
+        function filter(i) {
+            return i.filter(i => i.duration <= 40);
+        }
         if (!checked) {
-            setMovies(movies.filter(i => i.duration <= 40));
+            { movie ? setSaveMovies(filter(saveMovies)) : setMovies(filter(movies)) }
             setChecked(true);
-        } else { setChecked(false); setMovies(JSON.parse(localStorage.getItem('movies'))); }
+        } else {
+            setChecked(false);
+            { movie ? setSaveMovies(JSON.parse(localStorage.getItem('savemovies'))) : setMovies(JSON.parse(localStorage.getItem('movies'))) }
+        }
     }
+
+    // ищем в сохраненных фильмах
+    function searchSaveMovies(e) {
+        e.preventDefault();
+        if (search < 1) {
+            setValidate(true);
+        } else {
+            api.getMovies()
+                .then((res) => {
+                    const moviesFilter = res.filter((movie) => {
+                        const ruName = movie.nameRU.split(' ').filter((i) => {
+                            return i.toUpperCase() == search.toUpperCase();
+                        })
+                        const enName = movie.nameEN.split(' ').filter((i) => {
+                            return i.toUpperCase() == search.toUpperCase();
+                        })
+                        const description = movie.description.split(' ').filter((i) => {
+                            return i.toUpperCase() == search.toUpperCase();
+                        })
+                        const director = movie.director.split(' ').filter((i) => {
+                            return i.toUpperCase() == search.toUpperCase();
+                        })
+                        const country = movie.country.split(' ').filter((i) => {
+                            return i.toUpperCase() == search.toUpperCase();
+                        })
+                        return ruName.join().toUpperCase() == search.toUpperCase() ||
+                            country.join().toUpperCase() == search.toUpperCase() ||
+                            description.join().toUpperCase() == search.toUpperCase() ||
+                            director.join().toUpperCase() == search.toUpperCase() ||
+                            enName.join().toUpperCase() == search.toUpperCase() ||
+                            movie.year.toUpperCase() == search.toUpperCase()
+                    });
+                    localStorage.setItem('savemovies', JSON.stringify(moviesFilter));
+                    if (checked) {
+                        setSaveMovies(moviesFilter.filter(i => i.duration <= 40));
+                    } else { setSaveMovies(JSON.parse(localStorage.getItem('savemovies'))) }
+                    console.log(moviesFilter);
+                })
+
+
+
+        }
+    }
+
     return (
         <div className='search-form'>
-            <div className='search-form__container' onSubmit={searchMovies}>
+            <div className='search-form__container' onSubmit={movie ? searchSaveMovies : searchMovies}>
                 <form className='search-form__box'>
                     <input type='search' placeholder='Фильм' value={search || ''} onChange={onChange} onClick={() => { setValidate(false) }} className='search-form__field' minLength={1} />
                     <button className='search-form__button'>Найти</button>

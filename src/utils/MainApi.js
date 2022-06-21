@@ -22,7 +22,7 @@ class Api {
             .then(this._checkError);
     }
 
-    //получаем информацию о пользователе
+    //получаем сохраненные фильмы 
     getMovies() {
         return fetch('https://back.kachur.nomoreparties.sbs/movies', {
             method: 'GET',
