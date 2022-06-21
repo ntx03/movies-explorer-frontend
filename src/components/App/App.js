@@ -64,7 +64,8 @@ function App() {
 
   // управление компонентом More
   const [more, setMore] = useState(false);
-
+  // управление чекбоксом короткометражек
+  const [checked, setChecked] = React.useState(false);
 
 
   useEffect(() => {
@@ -86,6 +87,7 @@ function App() {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
       const movies = localStorage.getItem('movies');
+      const checked = localStorage.getItem('checked');
       if (token) {
         Promise.all([getContent(token), api.getMovies()])
           .then(([res, c]) => {
@@ -94,7 +96,8 @@ function App() {
               setLoggedIn(true);
               setErrorUpdate(false);
               navigate('/movies');
-              setMovies([]);
+              setMovies(JSON.parse(movies));
+              setChecked(checked);
             }
             setSaveMovies(c.filter(c => c.owner === currentUser._id));
             console.log(c.filter(c => c.owner === currentUser._id));
@@ -103,43 +106,6 @@ function App() {
       }
     }
   }, [loggedIn])
-
-  // проверка токена при входе на сайт
-  /* useEffect(() => {
-     if (localStorage.getItem('token')) {
-       const token = localStorage.getItem('token');
-       if (token) {
-         getContent(token)
-           .then((res) => {
-             if (res) {
-               setCurrentUser(res);
-               setLoggedIn(true);
-               setErrorUpdate(false);
-               getMoviesNomoreparties()
-                 .then((item) => {
-                   setMovies(item)
-                   console.log(item);
-                   api.getMovies()
-                     .then((c) => {
-                       setSaveMovies(c.filter(c => c.owner === currentUser._id));
-                       console.log(c.filter(c => c.owner === currentUser._id));
-                       navigate('/movies');
-                     })
-                     .catch((e) => console.log(e.message))
-                 })
-                 .catch((e) => console.log(e.message))
-             }
-           })
-           .catch((e) => console.log(e.message))
-       }
-     }
-   }, [loggedIn])*/
-
-  // берем сохраненные карточки с сервера
-  /*  useEffect(() => {
-  
-  
-    }, [loggedIn, movie])*/
 
   // открываем меню навигации
   function openNavigationMenu() {
@@ -192,7 +158,8 @@ function App() {
   // выходим из профиля
   function logOut() {
     navigate('/');
-    localStorage.removeItem('token');
+    localStorage.removeItem('token', 'checked', 'search');
+    localStorage.setItem('movies', []);
     setLoggedIn(false);
   }
 
@@ -235,7 +202,17 @@ function App() {
           <Route path='/' element={<Main loggedIn={loggedIn} movie={movie} movieSave={movieSave} errorRegisterEmail={() => setRegisterErrorEmail(false)} errorloginAuthorize={() => setLoginErrorAuthorize(false)} />} />
           <Route path='/movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <Movies loggedIn={loggedIn} more={more} movies={movies} movie={movie} movieSave={movieSave} isOpen={navigation} saveMovies={saveMovies} onClick={openNavigationMenu} />
+              <Movies loggedIn={loggedIn}
+                more={more}
+                movies={movies}
+                movie={movie}
+                movieSave={movieSave}
+                isOpen={navigation}
+                saveMovies={saveMovies}
+                onClick={openNavigationMenu}
+                setMovies={setMovies}
+                checked={checked}
+                setChecked={setChecked} />
             </ProtectedRoute>} />
           <Route path='/profile' element={
             <ProtectedRoute loggedIn={loggedIn}>
