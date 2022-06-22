@@ -4,7 +4,7 @@ import { getMoviesNomoreparties } from '../../../utils/MoviesApi';
 import api from '../../../utils/MainApi';
 import CurrentUserContext from '../../../contexts/currentUserContext';
 
-function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies, setSaveMovies, setPreloader, setList, setPreloaderNotFound, setPreloaderSearch, setPreloaderError, setMore }) {
+function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies, setSaveMovies, setPreloader, setList, setPreloaderNotFound, setPreloaderSearch, setPreloaderError, setMore, setCounter }) {
     const user = React.useContext(CurrentUserContext);
     const [search, setSearch] = React.useState('');
     const onChange = (e) => {
@@ -21,9 +21,46 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
         const handleResizeWindow = () => setWidth(window.innerWidth);
         // subscribe to window resize event "onComponentDidMount"
         window.addEventListener("resize", handleResizeWindow);
+        return () => {
+            // unsubscribe "onComponentDestroy"
+            window.removeEventListener("resize", handleResizeWindow);
+        };
     }, []);
-    // счетчик 
-    const [counter, setCounter] = React.useState(0);
+
+
+    function widthMoviesFilter(i) {
+        if (width > 850) {
+            if (i.length <= 12) {
+                setMovies(i);
+                setMore(false);
+            } else {
+                setMovies(i.slice(0, 12));
+                setMore(true);
+                setCounter(12);
+            }
+
+        } else if (450 > width <= 850) {
+            if (i.length <= 8) {
+                setMovies(i);
+                setMore(false);
+            } else {
+                setMovies(i.slice(0, 8));
+                setMore(true);
+                setCounter(8);
+            }
+        }
+        if (width <= 450) {
+            if (i.length <= 5) {
+                setMovies(i);
+                setMore(false);
+            } else {
+                setMovies(i.slice(0, 5));
+                setMore(true);
+                setCounter(5);
+            }
+        }
+
+    }
 
     // ищем фильмы
     const searchMovies = (e) => {
@@ -47,7 +84,6 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                                 return 'неизвестно'
                             } else return i;
                         }
-
                         const ruName = noNull(movie.nameRU).split(' ').filter((i) => {
                             return i.toUpperCase() == search.toUpperCase();
                         })
@@ -80,35 +116,8 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                         localStorage.setItem('movies', JSON.stringify(moviesFilter));
                         setPreloader(false);
                         setList(true);
-
-                        if (width > 850) {
-                            if (moviesFilter.length <= 12) {
-                                setMovies(moviesFilter);
-                                setMore(false);
-                            } else {
-                                setMovies(moviesFilter.slice(0, 12));
-                                setMore(true);
-                            }
-
-                        } else if ((450 > width) && (width <= 850)) {
-                            if (moviesFilter.length <= 8) {
-                                setMovies(moviesFilter);
-                                setMore(false);
-                            } else {
-                                setMovies(moviesFilter.slice(0, 8));
-                                setMore(true);
-                            }
-                        } else {
-                            if (moviesFilter.length <= 5) {
-                                setMovies(moviesFilter);
-                                setMore(false);
-                            } else {
-                                setMovies(moviesFilter.slice(0, 5));
-                                setMore(true);
-                            }
-                        }
-
-
+                        setCounter(0);
+                        widthMoviesFilter(moviesFilter);
 
                         /*  if (checked) {
                               setMovies(moviesFilter.filter(i => i.duration <= 40));
@@ -134,15 +143,18 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
     // Ищем короткометражки
     const checkedCheckbox = () => {
         console.log(checked);
+
         function filter(i) {
             return i.filter(i => i.duration <= 40);
         }
         if (checked) {
-            { movie ? setSaveMovies(filter(saveMovies)) : setMovies(filter(movies)) }
+            { movie ? setSaveMovies(filter(saveMovies)) : widthMoviesFilter(filter(movies)) }
             setChecked(false);
         } else {
             setChecked(true);
-            { movie ? setSaveMovies(JSON.parse(localStorage.getItem('savemovies'))) : setMovies(JSON.parse(localStorage.getItem('movies'))) }
+            const storageMovies = JSON.parse(localStorage.getItem('movies'));
+            console.log(storageMovies);
+            { movie ? setSaveMovies(JSON.parse(localStorage.getItem('savemovies'))) : widthMoviesFilter(storageMovies) }
         }
     }
 

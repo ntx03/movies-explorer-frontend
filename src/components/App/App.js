@@ -86,10 +86,31 @@ function App() {
   // управление чекбоксом короткометражек в сохраненных фильмах
   const [saveChecked, setSaveChecked] = useState(false);
 
+  // состояние ширины экрана
+  const [width, setWidth] = useState(window.innerWidth);
+
+  // счетчик 
+  const [counter, setCounter] = useState(0);
+
+  // мониторим ширину экрана
+  React.useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResizeWindow);
+    return () => {
+      window.removeEventListener("resize", handleResizeWindow);
+    };
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('checked', checked);
     // localStorage.setItem('savechecked', saveChecked);
   }, [checked])
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem('movies')).length <= counter) {
+      setMore(false);
+    }
+  }, [counter]);
 
   useEffect(() => {
     if (location.pathname === '/movies') {
@@ -121,6 +142,38 @@ function App() {
           return []
         } else return JSON.parse(moviesStorage);
       }
+      function widthFilmFilter(i) {
+        if (width > 850) {
+          if (i.length <= 12) {
+            setMovies(i);
+            setMore(false);
+          } else {
+            setMovies(i.slice(0, 12));
+            setCounter(12);
+            setMore(true);
+          }
+
+        } else if (450 > width <= 850) {
+          if (i.length <= 8) {
+            setMovies(i);
+            setMore(false);
+          } else {
+            setMovies(i.slice(0, 8));
+            setCounter(8);
+            setMore(true);
+          }
+        }
+        if (width <= 450) {
+          if (i.length <= 5) {
+            setMovies(i);
+            setMore(false);
+          } else {
+            setMovies(i.slice(0, 5));
+            setCounter(5);
+            setMore(true);
+          }
+        }
+      }
       console.log(movies());
       if (token) {
         Promise.all([getContent(token), api.getMovies()])
@@ -131,7 +184,8 @@ function App() {
               setErrorUpdate(false);
               //setChecked(checkedMovies);
               navigate('/movies');
-              setMovies(movies());
+              widthFilmFilter(movies());
+              // setMovies(movies());
             }
             localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
             //setSaveChecked(checkedSaveMovies);
@@ -193,7 +247,7 @@ function App() {
                 localStorage.setItem('movies', []);
               }
               localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
-              setSaveMovies([]);
+              setSaveMovies(c.filter(c => c.owner === currentUser._id));
               console.log(c.filter(c => c.owner === currentUser._id));
             })
             .catch((e) => console.log(e.message))
@@ -248,8 +302,6 @@ function App() {
         localStorage.setItem('savemovies', JSON.stringify(saveMovies.filter(c => c._id !== movie._id)));
       })
       .catch(err => console.log(err));
-
-
   }
 
   return (
@@ -263,7 +315,8 @@ function App() {
             errorloginAuthorize={() => setLoginErrorAuthorize(false)} />} />
           <Route path='/movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
-              <Movies loggedIn={loggedIn}
+              <Movies
+                loggedIn={loggedIn}
                 more={more}
                 setMore={setMore}
                 movies={movies}
@@ -284,7 +337,10 @@ function App() {
                 preloaderSearch={preloaderSearch}
                 setPreloaderSearch={setPreloaderSearch}
                 preloaderError={preloaderError}
-                setPreloaderError={setPreloaderError} />
+                setPreloaderError={setPreloaderError}
+                setCounter={setCounter}
+                counter={counter}
+              />
             </ProtectedRoute>} />
           <Route path='/profile' element={
             <ProtectedRoute loggedIn={loggedIn}>

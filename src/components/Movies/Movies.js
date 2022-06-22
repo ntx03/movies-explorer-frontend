@@ -29,7 +29,9 @@ function Movies({
     preloaderSearch,
     setPreloaderSearch,
     preloaderError,
-    setPreloaderError
+    setPreloaderError,
+    setCounter,
+    counter
 }) {
 
     return (
@@ -45,10 +47,11 @@ function Movies({
                 setPreloaderNotFound={setPreloaderNotFound}
                 setPreloaderSearch={setPreloaderSearch}
                 setPreloaderError={setPreloaderError}
-                setMore={setMore} />
+                setMore={setMore}
+                setCounter={setCounter} />
             <Preloader preloader={preloader} preloaderNotFound={preloaderNotFound} preloaderSearch={preloaderSearch} preloaderError={preloaderError} />
             <MoviesCardList movie={movie} movies={movies} saveMovies={saveMovies} list={list} />
-            <More more={more} />
+            <More more={more} setCounter={setCounter} counter={counter} setMovies={setMovies} />
             <Footer />
         </section>
     );
