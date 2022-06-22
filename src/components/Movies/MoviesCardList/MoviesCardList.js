@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 
-function MoviesCardList({ movie, movies, handleMovieDelete, saveMovies }) {
+function MoviesCardList({ movie, movies, handleMovieDelete, saveMovies, list }) {
 
     return (
-        <div className='list'>
+        <div className={list ? 'list' : 'list_none'}>
             <div className='list__container'>
                 <div className='list__cards'>
                     {Array.prototype.map.call(movies, function (item) {

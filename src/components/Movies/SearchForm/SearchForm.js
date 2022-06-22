@@ -2,22 +2,42 @@ import React from 'react';
 import './SearchForm.css';
 import { getMoviesNomoreparties } from '../../../utils/MoviesApi';
 import api from '../../../utils/MainApi';
+import CurrentUserContext from '../../../contexts/currentUserContext';
 
-function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies, setSaveMovies }) {
+function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies, setSaveMovies, setPreloader, setList, setPreloaderNotFound, setPreloaderSearch, setPreloaderError, setMore }) {
+    const user = React.useContext(CurrentUserContext);
     const [search, setSearch] = React.useState('');
     const onChange = (e) => {
         setSearch(e.target.value)
     }
     // состояние валидации кнопки найти
     const [validate, setValidate] = React.useState(false);
-    // const [checked, setChecked] = React.useState(false);
+
+    // состояние ширины экрана
+    const [width, setWidth] = React.useState(window.innerWidth);
+
+    // мониторим ширину экрана
+    React.useEffect(() => {
+        const handleResizeWindow = () => setWidth(window.innerWidth);
+        // subscribe to window resize event "onComponentDidMount"
+        window.addEventListener("resize", handleResizeWindow);
+    }, []);
+    // счетчик 
+    const [counter, setCounter] = React.useState(0);
 
     // ищем фильмы
     const searchMovies = (e) => {
         e.preventDefault();
+        console.log(width);
         if (search < 1) {
             setValidate(true);
         } else {
+            setPreloader(true);
+            setPreloaderSearch(true);
+            setPreloaderError(false);
+            setPreloaderNotFound(false);
+            setList(false);
+            setMore(false);
             localStorage.setItem('search', search);
             getMoviesNomoreparties()
                 .then((res) => {
@@ -52,13 +72,62 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                             enName.join().toUpperCase() == search.toUpperCase() ||
                             noNull(movie.year).toUpperCase() == search.toUpperCase()
                     });
-                    localStorage.setItem('movies', JSON.stringify(moviesFilter));
-                    if (checked) {
-                        setMovies(moviesFilter.filter(i => i.duration <= 40));
-                    } else { setMovies(JSON.parse(localStorage.getItem('movies'))) }
-                    console.log(moviesFilter);
+
+                    if (moviesFilter.length === 0) {
+                        setPreloaderNotFound(true);
+                        setPreloaderSearch(false);
+                    } else {
+                        localStorage.setItem('movies', JSON.stringify(moviesFilter));
+                        setPreloader(false);
+                        setList(true);
+
+                        if (width > 850) {
+                            if (moviesFilter.length <= 12) {
+                                setMovies(moviesFilter);
+                                setMore(false);
+                            } else {
+                                setMovies(moviesFilter.slice(0, 12));
+                                setMore(true);
+                            }
+
+                        } else if ((450 > width) && (width <= 850)) {
+                            if (moviesFilter.length <= 8) {
+                                setMovies(moviesFilter);
+                                setMore(false);
+                            } else {
+                                setMovies(moviesFilter.slice(0, 8));
+                                setMore(true);
+                            }
+                        } else {
+                            if (moviesFilter.length <= 5) {
+                                setMovies(moviesFilter);
+                                setMore(false);
+                            } else {
+                                setMovies(moviesFilter.slice(0, 5));
+                                setMore(true);
+                            }
+                        }
+
+
+
+                        /*  if (checked) {
+                              setMovies(moviesFilter.filter(i => i.duration <= 40));
+                              setPreloader(false);
+                              setList(true);
+                          } else {
+                              setMovies(JSON.parse(localStorage.getItem('movies')))
+                              console.log(moviesFilter);
+                              setPreloader(false);
+                              setList(true);
+                          }*/
+                    }
                 })
-                .catch((e) => { console.log(e.message) })
+                .catch((e) => {
+                    setPreloaderNotFound(false);
+                    setPreloaderSearch(false);
+                    setPreloaderError(true);
+                    console.log(e.message)
+                })
         }
     }
 
@@ -68,11 +137,11 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
         function filter(i) {
             return i.filter(i => i.duration <= 40);
         }
-        if (!checked) {
+        if (checked) {
             { movie ? setSaveMovies(filter(saveMovies)) : setMovies(filter(movies)) }
-            setChecked(true);
-        } else {
             setChecked(false);
+        } else {
+            setChecked(true);
             { movie ? setSaveMovies(JSON.parse(localStorage.getItem('savemovies'))) : setMovies(JSON.parse(localStorage.getItem('movies'))) }
         }
     }
@@ -83,6 +152,11 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
         if (search < 1) {
             setValidate(true);
         } else {
+            setPreloader(true);
+            setList(false);
+            setPreloaderError(false);
+            setPreloaderSearch(true);
+            setPreloaderNotFound(false);
             api.getMovies()
                 .then((res) => {
                     const moviesFilter = res.filter((movie) => {
@@ -109,14 +183,30 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                             movie.year.toUpperCase() == search.toUpperCase()
                     });
                     localStorage.setItem('savemovies', JSON.stringify(moviesFilter));
-                    if (checked) {
-                        setSaveMovies(moviesFilter.filter(i => i.duration <= 40));
-                    } else { setSaveMovies(JSON.parse(localStorage.getItem('savemovies'))) }
-                    console.log(moviesFilter);
+                    if (moviesFilter.length === 0) {
+                        setPreloaderNotFound(true);
+                        setPreloaderSearch(false);
+                    } else {
+                        setSaveMovies(moviesFilter.filter(c => c.owner === user._id));
+                        setPreloader(false);
+                        setList(true);
+                        console.log(user);
+                        /* if (checked) {
+                             setSaveMovies(moviesFilter.filter(i => i.duration <= 40));
+                             setPreloader(false); setList(true);
+                         } else {
+                             setSaveMovies(JSON.parse(localStorage.getItem('savemovies')))
+                             setPreloader(false); setList(true);
+                         }*/
+                        console.log(moviesFilter);
+                    }
                 })
-
-
-
+                .catch((e) => {
+                    setPreloaderNotFound(false);
+                    setPreloaderSearch(false);
+                    setPreloaderError(true);
+                    console.log(e.message)
+                })
         }
     }
 
@@ -132,7 +222,7 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                 </div>
                 <div className='search-form__checkbox-container'>
                     <div className='search-form__checkbox-box'>
-                        <input type='checkbox' className='search-form__checkbox' checked={checked} onChange={checkedCheckbox} />
+                        <input type='checkbox' className='search-form__checkbox' checked={!checked} onChange={checkedCheckbox} />
                     </div>
                     <p className='search-form__checkbox-text'>Короткометражки</p>
                 </div>

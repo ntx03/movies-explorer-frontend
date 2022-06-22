@@ -65,6 +65,21 @@ function App() {
   // управление компонентом More
   const [more, setMore] = useState(false);
 
+  //  управление прелоадером в общем
+  const [preloader, setPreloader] = useState(false);
+
+  //  управление прелоадером поиск
+  const [preloaderSearch, setPreloaderSearch] = useState(false);
+
+  //  управление прелоадером c надписбю ошибки
+  const [preloaderError, setPreloaderError] = useState(false);
+
+  //  управление надписью "не найдено" в прелоадере 
+  const [preloaderNotFound, setPreloaderNotFound] = useState(false);
+
+  // управление cardlist
+  const [list, setList] = useState(true);
+
   // управление чекбоксом короткометражек в фильмах
   const [checked, setChecked] = useState(false);
 
@@ -73,22 +88,22 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('checked', checked);
-    localStorage.setItem('savechecked', saveChecked);
-  }, [checked, saveChecked])
+    // localStorage.setItem('savechecked', saveChecked);
+  }, [checked])
 
   useEffect(() => {
     if (location.pathname === '/movies') {
       setMovie(false); setMovieSave(true);
     }
     if (location.pathname === '/saved-movies') {
-      setMovie(true); setMovieSave(false);
+      setMovie(true); setMovieSave(false); setList(true);
       api.getMovies()
         .then((c) => {
           setSaveMovies(c.filter(c => c.owner === currentUser._id));
           localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
           if (saveChecked) {
             setSaveMovies(saveMovies.filter(i => i.duration <= 40));
-          } else setSaveMovies()
+          } else setSaveMovies(JSON.parse(localStorage.getItem('savemovies')))
         })
         .catch((e) => { console.log(e.message) })
     }
@@ -101,9 +116,8 @@ function App() {
       const checkedMovies = localStorage.getItem('checked');
       const checkedSaveMovies = localStorage.getItem('savechecked');
       const search = localStorage.getItem('search');
-
       function movies() {
-        if (moviesStorage === (null || undefined || " ")) {
+        if (moviesStorage === (null || "")) {
           return []
         } else return JSON.parse(moviesStorage);
       }
@@ -115,18 +129,15 @@ function App() {
               setCurrentUser(res);
               setLoggedIn(true);
               setErrorUpdate(false);
-              setChecked(checkedMovies);
+              //setChecked(checkedMovies);
               navigate('/movies');
-              console.log(movies());
-              if (checked) {
-                setMovies(movies());
-              } else setSaveMovies(movies())
-
+              setMovies(movies());
             }
             localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
             //setSaveChecked(checkedSaveMovies);
-
             setSaveMovies(c.filter(c => c.owner === currentUser._id));
+            console.log(c.filter(c => c.owner === currentUser._id));
+
           })
           .catch((e) => console.log(e.message))
       }
@@ -254,6 +265,7 @@ function App() {
             <ProtectedRoute loggedIn={loggedIn}>
               <Movies loggedIn={loggedIn}
                 more={more}
+                setMore={setMore}
                 movies={movies}
                 movie={movie}
                 movieSave={movieSave}
@@ -262,7 +274,17 @@ function App() {
                 onClick={openNavigationMenu}
                 setMovies={setMovies}
                 checked={checked}
-                setChecked={setChecked} />
+                setChecked={setChecked}
+                preloader={preloader}
+                setPreloader={setPreloader}
+                list={list}
+                setList={setList}
+                preloaderNotFound={preloaderNotFound}
+                setPreloaderNotFound={setPreloaderNotFound}
+                preloaderSearch={preloaderSearch}
+                setPreloaderSearch={setPreloaderSearch}
+                preloaderError={preloaderError}
+                setPreloaderError={setPreloaderError} />
             </ProtectedRoute>} />
           <Route path='/profile' element={
             <ProtectedRoute loggedIn={loggedIn}>
@@ -288,7 +310,17 @@ function App() {
                 handleMovieDelete={handleMovieDelete}
                 setSaveMovies={setSaveMovies}
                 checked={saveChecked}
-                setChecked={setSaveChecked} />
+                setChecked={setSaveChecked}
+                setPreloader={setPreloader}
+                preloader={preloader}
+                list={list}
+                setList={setList}
+                preloaderNotFound={preloaderNotFound}
+                setPreloaderNotFound={setPreloaderNotFound}
+                preloaderSearch={preloaderSearch}
+                setPreloaderSearch={setPreloaderSearch}
+                preloaderError={preloaderError}
+                setPreloaderError={setPreloaderError} />
             </ProtectedRoute>} />
           <Route path='/signup' element={<Register onRegister={onRegister} errorRegisterEmail={registerErrorEmail} errorRegister={registerError} />} />
           <Route path='/signin' element={<Login onLogin={onLogin} loginErrorAuthorize={loginErrorAuthorize} loginError={loginError} />} />
