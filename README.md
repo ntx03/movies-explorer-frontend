@@ -5,7 +5,7 @@ back-end: https://back.kachur.nomoreparties.sbs
 
 Представляет возможность найти и сохранить найденный вами фильм.
 
-## Привеняемые технологии
+## Технологии
 
 React
 Javascript
