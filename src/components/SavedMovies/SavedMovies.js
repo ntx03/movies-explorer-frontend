@@ -16,8 +16,8 @@ function SavedMovies({
     handleMovieDelete,
     movies,
     setSaveMovies,
-    checked,
-    setChecked,
+    saveChecked,
+    setSaveChecked,
     preloader,
     setPreloader,
     list,
@@ -37,8 +37,8 @@ function SavedMovies({
                 movie={movie}
                 saveMovies={saveMovies}
                 setSaveMovies={setSaveMovies}
-                setChecked={setChecked}
-                checked={checked}
+                setSaveChecked={setSaveChecked}
+                saveChecked={saveChecked}
                 setPreloader={setPreloader}
                 setList={setList}
                 setPreloaderNotFound={setPreloaderNotFound}

@@ -33,7 +33,7 @@ function Register({ onRegister, errorRegisterEmail, errorRegister }) {
     const [nameValidate, setNameValidate] = useState('');
     const onChangeName = (e) => {
         setName(e.target.value)
-        if (e.target.value.length < 3) {
+        if (e.target.value.length < 2) {
             setNameValidate(false);
         } else {
             setNameValidate(true);

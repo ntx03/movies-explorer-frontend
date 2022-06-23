@@ -2,7 +2,6 @@ import React from 'react';
 import './More.css';
 
 function More({ more, setCounter, counter, setMovies }) {
-    console.log(JSON.parse(localStorage.getItem('movies')));
     // состояние ширины экрана
     const [width, setWidth] = React.useState(window.innerWidth);
 

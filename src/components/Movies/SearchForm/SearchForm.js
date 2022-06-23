@@ -4,9 +4,9 @@ import { getMoviesNomoreparties } from '../../../utils/MoviesApi';
 import api from '../../../utils/MainApi';
 import CurrentUserContext from '../../../contexts/currentUserContext';
 
-function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies, setSaveMovies, setPreloader, setList, setPreloaderNotFound, setPreloaderSearch, setPreloaderError, setMore, setCounter }) {
+function SearchForm({ setMovies, movie, setSaveMovies, setPreloader, setList, setPreloaderNotFound, setPreloaderSearch, setPreloaderError, setMore, setCounter, checked, setChecked, saveChecked, setSaveChecked }) {
     const user = React.useContext(CurrentUserContext);
-    const [search, setSearch] = React.useState('');
+    const [search, setSearch] = React.useState('Фильм');
     const onChange = (e) => {
         setSearch(e.target.value)
     }
@@ -25,9 +25,15 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
             // unsubscribe "onComponentDestroy"
             window.removeEventListener("resize", handleResizeWindow);
         };
+
     }, []);
 
+    // запоминаем слово поиска
+    React.useEffect(() => {
+        setSearch(localStorage.getItem('search'));
+    }, [])
 
+    // размещаем количество фильмов в завимимости от ширины экрана
     function widthMoviesFilter(i) {
         if (width > 850) {
             if (i.length <= 12) {
@@ -59,13 +65,11 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                 setCounter(5);
             }
         }
-
     }
 
     // ищем фильмы
     const searchMovies = (e) => {
         e.preventDefault();
-        console.log(width);
         if (search < 1) {
             setValidate(true);
         } else {
@@ -117,18 +121,16 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                         setPreloader(false);
                         setList(true);
                         setCounter(0);
-                        widthMoviesFilter(moviesFilter);
-
-                        /*  if (checked) {
-                              setMovies(moviesFilter.filter(i => i.duration <= 40));
-                              setPreloader(false);
-                              setList(true);
-                          } else {
-                              setMovies(JSON.parse(localStorage.getItem('movies')))
-                              console.log(moviesFilter);
-                              setPreloader(false);
-                              setList(true);
-                          }*/
+                        if (checked) {
+                            widthMoviesFilter(moviesFilter);
+                            setMovies(moviesFilter.filter(i => i.duration <= 40));
+                            setPreloader(false);
+                            setList(true);
+                        } else {
+                            widthMoviesFilter(JSON.parse(localStorage.getItem('movies')));
+                            setPreloader(false);
+                            setList(true);
+                        }
                     }
                 })
                 .catch((e) => {
@@ -142,19 +144,38 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
 
     // Ищем короткометражки
     const checkedCheckbox = () => {
-        console.log(checked);
-
+        const storageMovies = JSON.parse(localStorage.getItem('movies'));
+        // фильтруем фильмы
         function filter(i) {
             return i.filter(i => i.duration <= 40);
         }
-        if (checked) {
-            { movie ? setSaveMovies(filter(saveMovies)) : widthMoviesFilter(filter(movies)) }
-            setChecked(false);
-        } else {
+        if (!checked) {
+            widthMoviesFilter(filter(storageMovies))
             setChecked(true);
-            const storageMovies = JSON.parse(localStorage.getItem('movies'));
-            console.log(storageMovies);
-            { movie ? setSaveMovies(JSON.parse(localStorage.getItem('savemovies'))) : widthMoviesFilter(storageMovies) }
+            localStorage.setItem('checked', true);
+        } else {
+            setChecked(false);
+            localStorage.setItem('checked', false);
+            widthMoviesFilter(storageMovies)
+        }
+    }
+
+    // Ищем короткометражки movieSave
+    const checkedCheckboxSave = () => {
+        console.log(!saveChecked);
+        const storageMovies = JSON.parse(localStorage.getItem('savemovies'));
+        // фильтруем фильмы
+        function filter(i) {
+            return i.filter(i => i.duration <= 40);
+        }
+        if (!saveChecked) {
+            setSaveMovies(filter(storageMovies));
+            setSaveChecked(true);
+            localStorage.setItem('savechecked', true);
+        } else {
+            setSaveChecked(false);
+            localStorage.setItem('savechecked', false);
+            setSaveMovies(storageMovies);
         }
     }
 
@@ -202,15 +223,13 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                         setSaveMovies(moviesFilter.filter(c => c.owner === user._id));
                         setPreloader(false);
                         setList(true);
-                        console.log(user);
-                        /* if (checked) {
-                             setSaveMovies(moviesFilter.filter(i => i.duration <= 40));
-                             setPreloader(false); setList(true);
-                         } else {
-                             setSaveMovies(JSON.parse(localStorage.getItem('savemovies')))
-                             setPreloader(false); setList(true);
-                         }*/
-                        console.log(moviesFilter);
+                        if (saveChecked) {
+                            setSaveMovies(moviesFilter.filter(i => i.duration <= 40));
+                            setPreloader(false); setList(true);
+                        } else {
+                            setSaveMovies(JSON.parse(localStorage.getItem('savemovies')))
+                            setPreloader(false); setList(true);
+                        }
                     }
                 })
                 .catch((e) => {
@@ -234,7 +253,7 @@ function SearchForm({ setMovies, movies, checked, setChecked, movie, saveMovies,
                 </div>
                 <div className='search-form__checkbox-container'>
                     <div className='search-form__checkbox-box'>
-                        <input type='checkbox' className='search-form__checkbox' checked={!checked} onChange={checkedCheckbox} />
+                        <input type='checkbox' className='search-form__checkbox' checked={movie ? saveChecked : checked} onChange={movie ? checkedCheckboxSave : checkedCheckbox} />
                     </div>
                     <p className='search-form__checkbox-text'>Короткометражки</p>
                 </div>

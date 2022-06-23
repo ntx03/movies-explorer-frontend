@@ -14,9 +14,9 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import { register, authorize, getContent } from '../../utils/auth';
 import api from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/currentUserContext';
-import { getMoviesNomoreparties } from '../../utils/MoviesApi';
 import ProtectedRoute from '../ProtectedRoute';
-import Preloader from '../Preloader/Preloader';
+
+
 
 function App() {
   let location = useLocation();
@@ -80,17 +80,16 @@ function App() {
   // управление cardlist
   const [list, setList] = useState(true);
 
-  // управление чекбоксом короткометражек в фильмах
-  const [checked, setChecked] = useState(false);
-
-  // управление чекбоксом короткометражек в сохраненных фильмах
-  const [saveChecked, setSaveChecked] = useState(false);
-
   // состояние ширины экрана
   const [width, setWidth] = useState(window.innerWidth);
 
   // счетчик 
   const [counter, setCounter] = useState(0);
+  // управление чекбоксом короткометражек в фильмах
+  const [checked, setChecked] = React.useState(false);
+
+  // управление чекбоксом короткометражек в сохраненных фильмах
+  const [saveChecked, setSaveChecked] = React.useState(false);
 
   // мониторим ширину экрана
   React.useEffect(() => {
@@ -101,13 +100,16 @@ function App() {
     };
   }, []);
 
+  // приводим в порядок данные 
+  function filterMoviesBadData() {
+    const moviesStorage = localStorage.getItem('movies');
+    if (moviesStorage === (null || "")) {
+      return []
+    } else return JSON.parse(moviesStorage);
+  }
+  // отключаем кнопку ЕЩЕ 
   useEffect(() => {
-    localStorage.setItem('checked', checked);
-    // localStorage.setItem('savechecked', saveChecked);
-  }, [checked])
-
-  useEffect(() => {
-    if (JSON.parse(localStorage.getItem('movies')).length <= counter) {
+    if (filterMoviesBadData().length <= counter) {
       setMore(false);
     }
   }, [counter]);
@@ -130,18 +132,13 @@ function App() {
     }
   }, [location.pathname])
 
+
   useEffect(() => {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
-      const moviesStorage = localStorage.getItem('movies');
+
       const checkedMovies = localStorage.getItem('checked');
-      const checkedSaveMovies = localStorage.getItem('savechecked');
-      const search = localStorage.getItem('search');
-      function movies() {
-        if (moviesStorage === (null || "")) {
-          return []
-        } else return JSON.parse(moviesStorage);
-      }
+
       function widthFilmFilter(i) {
         if (width > 850) {
           if (i.length <= 12) {
@@ -174,7 +171,6 @@ function App() {
           }
         }
       }
-      console.log(movies());
       if (token) {
         Promise.all([getContent(token), api.getMovies()])
           .then(([res, c]) => {
@@ -182,26 +178,22 @@ function App() {
               setCurrentUser(res);
               setLoggedIn(true);
               setErrorUpdate(false);
-              //setChecked(checkedMovies);
-              navigate('/movies');
-              widthFilmFilter(movies());
-              // setMovies(movies());
+              { !checkedMovies ? widthFilmFilter(filterMoviesBadData().filter(i => i.duration <= 40)) : widthFilmFilter(filterMoviesBadData()) }
             }
             localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
-            //setSaveChecked(checkedSaveMovies);
             setSaveMovies(c.filter(c => c.owner === currentUser._id));
-            console.log(c.filter(c => c.owner === currentUser._id));
-
+            navigate('/movies');
           })
           .catch((e) => console.log(e.message))
       }
     }
-  }, [loggedIn])
+  }, [])
 
   // открываем меню навигации
   function openNavigationMenu() {
     setNavigation(true);
   }
+
   // закрываем меню навигации
   function closeNavigationMenu() {
     setNavigation(false);
@@ -215,15 +207,34 @@ function App() {
           setRegisterErrorEmail(true);
           setRegisterError(false);
         } else {
-          navigate('/movies');
-          setRegisterErrorEmail(false);
-          setLoggedIn(true);
+          authorize(password, email)
+            .then((res) => {
+              const token = localStorage.getItem('token');
+              if (res === 401) {
+                setLoginErrorAuthorize(true);
+                setLoggedIn(false);
+                setLoginError(false);
+              } else {
+                getContent(token)
+                  .then((res) => {
+                    if (res) {
+                      setCurrentUser(res);
+                      setLoggedIn(true);
+                      setErrorUpdate(false);
+                      navigate('/movies');
+                      setMovies([]);
+                      localStorage.setItem('movies', []);
+                    }
+                  })
+                  .catch((e) => console.log(e.message))
+              }
+            })
+            .catch(() => {
+              setRegisterErrorEmail(true);
+              setRegisterError(true);
+            });
         }
       })
-      .catch(() => {
-        setRegisterErrorEmail(true);
-        setRegisterError(true);
-      });
   }
   // проходим авторизацию
   function onLogin(password, email) {
@@ -248,7 +259,6 @@ function App() {
               }
               localStorage.setItem('savemovies', JSON.stringify(c.filter(c => c.owner === currentUser._id)));
               setSaveMovies(c.filter(c => c.owner === currentUser._id));
-              console.log(c.filter(c => c.owner === currentUser._id));
             })
             .catch((e) => console.log(e.message))
         }
@@ -259,10 +269,14 @@ function App() {
         setLoggedIn(false);
       });
   }
+
   // выходим из профиля
   function logOut() {
     navigate('/');
-    localStorage.removeItem('token', 'checked', 'search');
+    localStorage.removeItem('token');
+    localStorage.removeItem('search');
+    localStorage.removeItem('checked');
+    localStorage.removeItem('savechecked');
     localStorage.setItem('movies', []);
     localStorage.setItem('savemovies', []);
     setLoggedIn(false);
@@ -291,14 +305,12 @@ function App() {
         }
       });
   }
+
   // удаление карточки
   function handleMovieDelete(movie) {
     api.removeMovie(movie._id)
-      .then((res) => {
-        console.log(res);
-        console.log(saveMovies);
+      .then(() => {
         setSaveMovies(state => state.filter(c => c._id !== movie._id));
-        console.log(saveMovies.filter(c => c._id !== movie._id));
         localStorage.setItem('savemovies', JSON.stringify(saveMovies.filter(c => c._id !== movie._id)));
       })
       .catch(err => console.log(err));
@@ -365,8 +377,8 @@ function App() {
                 movies={movies}
                 handleMovieDelete={handleMovieDelete}
                 setSaveMovies={setSaveMovies}
-                checked={saveChecked}
-                setChecked={setSaveChecked}
+                saveChecked={saveChecked}
+                setSaveChecked={setSaveChecked}
                 setPreloader={setPreloader}
                 preloader={preloader}
                 list={list}

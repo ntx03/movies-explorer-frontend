@@ -10,7 +10,13 @@ function MoviesCardList({ movie, movies, handleMovieDelete, saveMovies, list }) 
                 <div className='list__cards'>
                     {Array.prototype.map.call(movies, function (item) {
                         return (
-                            <MoviesCard movie={movie} key={movie ? item.movieId : item.id} item={item} handleMovieDelete={handleMovieDelete} saveMovies={saveMovies} />
+                            <MoviesCard
+                                movie={movie}
+                                key={movie ? item.movieId : item.id}
+                                item={item}
+                                handleMovieDelete={handleMovieDelete}
+                                saveMovies={saveMovies}
+                            />
                         )
                     })}
                 </div>

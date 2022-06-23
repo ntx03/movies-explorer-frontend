@@ -50,7 +50,6 @@ function MoviesCard({ movie, item, handleMovieDelete, saveMovies }) {
         }
 
         if (!like) {
-            console.log(dataMovie);
             api.patchMovie(dataMovie)
                 .then((res) => {
                     setLike(true);
