@@ -103,7 +103,7 @@ function App() {
   // приводим в порядок данные 
   function filterMoviesBadData() {
     const moviesStorage = localStorage.getItem('movies');
-    if (moviesStorage === (null || "")) {
+    if (moviesStorage === null || " ") {
       return []
     } else return JSON.parse(moviesStorage);
   }
@@ -286,7 +286,8 @@ function App() {
   function updateUser(name, email) {
     setCurrentUser({
       name: name,
-      email: email
+      email: email,
+      _id: currentUser._id
     })
     api.patchUser({ name, email })
       .then((res) => {

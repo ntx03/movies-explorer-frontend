@@ -162,7 +162,6 @@ function SearchForm({ setMovies, movie, setSaveMovies, setPreloader, setList, se
 
     // Ищем короткометражки movieSave
     const checkedCheckboxSave = () => {
-        console.log(!saveChecked);
         const storageMovies = JSON.parse(localStorage.getItem('savemovies'));
         // фильтруем фильмы
         function filter(i) {

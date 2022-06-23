@@ -32,7 +32,7 @@ function ProfileSection({ logOut, updateUser, errorUpdate, errorEmailUpdate, set
     const [nameValidate, setNameValidate] = useState(true);
     const onChangeName = (e) => {
         setName(e.target.value)
-        if (e.target.value.length < 4) {
+        if (e.target.value.length < 2) {
             setNameValidate(false);
         } else {
             setNameValidate(true);
