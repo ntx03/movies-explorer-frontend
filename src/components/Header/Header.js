@@ -11,7 +11,7 @@ function Header({ loggedIn, movie, movieSave, onClick, errorloginAuthorize, erro
     return (
         <div className={loggedIn ? 'header_movie' : 'header'}>
             <div className='header__container'>
-                <img src={logo} className={loggedIn ? 'header__logo_login' : 'header__logo'} alt='зеленый смайлик' />
+                <Link to='/'> <img src={logo} className={loggedIn ? 'header__logo_login' : 'header__logo'} alt='зеленый смайлик' /></Link>
                 <div className='header__menu'>
                     <Link to='/signup' onClick={errorRegisterEmail} className={loggedIn ? 'header__menu-signup_none' : 'header__menu-signup'}>Регистрация</Link>
                     <Link to='/signin' onClick={errorloginAuthorize} className={loggedIn ? 'header__menu-signin_none' : 'header__menu-signin'}>Войти</Link>

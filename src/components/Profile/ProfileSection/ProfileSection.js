@@ -4,20 +4,18 @@ import { useState, useEffect } from "react";
 import { getContent } from '../../../utils/auth';
 import CurrentUserContext from '../../../contexts/currentUserContext';
 
-function ProfileSection({ logOut, updateUser, errorUpdate, errorEmailUpdate, setErrorUpdate }) {
+function ProfileSection({ logOut, updateUser, errorUpdate, errorEmailUpdate, setErrorUpdate, button, setButton, userName, setUserName, email, setEmail, name, setName }) {
     const user = React.useContext(CurrentUserContext);
 
-    // управление кнопкой
-    const [button, setButton] = useState(false);
 
-    // имя пользователя 
-    const [userName, setUserName] = useState('Вася');
 
-    // записываем инпут email при отправке submit
-    const [changeEmail, setchangeEmail] = useState('');
+    // записываем инпут email при отправке submit или при нажатии на кнопку редактировать
+    const [changeEmail, setChangeEmail] = useState('');
+
+    // записываем инпут name при нажатии на кнопку редактировать
+    const [changeName, setChangeName] = useState('');
 
     // емайл пользователя
-    const [email, setEmail] = useState('');
     const [emailValidate, setEmailValidate] = useState(true);
     const onChangeEmail = (e) => {
         setEmail(e.target.value)
@@ -28,7 +26,7 @@ function ProfileSection({ logOut, updateUser, errorUpdate, errorEmailUpdate, set
         } else { setEmailValidate(true); }
     }
 
-    const [name, setName] = useState('');
+
     const [nameValidate, setNameValidate] = useState(true);
     const onChangeName = (e) => {
         setName(e.target.value)
@@ -50,13 +48,15 @@ function ProfileSection({ logOut, updateUser, errorUpdate, errorEmailUpdate, set
     const update = (e) => {
         e.preventDefault();
         updateUser(name, email);
-        setchangeEmail(email);
     }
 
     // управление кнопкой редактирования профиля
     const saveFrofileButton = (e) => {
         e.preventDefault();
         setButton(true);
+        setChangeName(name);
+        setChangeEmail(email);
+        setValidate(false);
     }
 
     // подгрузка данных о себе
@@ -69,10 +69,11 @@ function ProfileSection({ logOut, updateUser, errorUpdate, errorEmailUpdate, set
 
     // сброс disabled с кнопки сохранить
     useEffect(() => {
-        if (changeEmail !== email) {
+        if (changeEmail !== email || changeName !== name) {
             setErrorUpdate(false);
-        }
-    }, [email]);
+            setValidate(true);
+        } else setValidate(false);
+    }, [email, name]);
 
     return (
         <section className='profile'>

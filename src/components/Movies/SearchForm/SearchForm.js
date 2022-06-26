@@ -144,19 +144,26 @@ function SearchForm({ setMovies, movie, setSaveMovies, setPreloader, setList, se
 
     // Ищем короткометражки
     const checkedCheckbox = () => {
-        const storageMovies = JSON.parse(localStorage.getItem('movies'));
+        function filterMoviesBadData() {
+            const moviesStorage = localStorage.getItem('movies');
+            if (moviesStorage == '') {
+                return []
+            } else
+                return JSON.parse(moviesStorage);
+        }
+
         // фильтруем фильмы
         function filter(i) {
             return i.filter(i => i.duration <= 40);
         }
         if (!checked) {
-            widthMoviesFilter(filter(storageMovies))
+            widthMoviesFilter(filter(filterMoviesBadData()))
             setChecked(true);
             localStorage.setItem('checked', true);
         } else {
             setChecked(false);
             localStorage.setItem('checked', false);
-            widthMoviesFilter(storageMovies)
+            widthMoviesFilter(filterMoviesBadData())
         }
     }
 

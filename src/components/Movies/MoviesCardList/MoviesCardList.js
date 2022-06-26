@@ -12,7 +12,7 @@ function MoviesCardList({ movie, movies, handleMovieDelete, saveMovies, list }) 
                         return (
                             <MoviesCard
                                 movie={movie}
-                                key={movie ? item.movieId : item.id}
+                                key={movie ? item._id : item.id}
                                 item={item}
                                 handleMovieDelete={handleMovieDelete}
                                 saveMovies={saveMovies}

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './MoviesCard.css';
 import api from '../../../utils/MainApi'
+import CurrentUserContext from '../../../contexts/currentUserContext';
 
 function MoviesCard({ movie, item, handleMovieDelete, saveMovies }) {
     const URL = 'https://api.nomoreparties.co';
-
+    const user = React.useContext(CurrentUserContext);
     const [like, setLike] = useState(false);
 
     useEffect(() => {
@@ -59,10 +60,10 @@ function MoviesCard({ movie, item, handleMovieDelete, saveMovies }) {
             api.getMovies()
                 .then((res) => {
                     res.forEach((movie) => {
-                        if (movie.movieId === item.id) {
+                        if (movie.owner === user._id && movie.movieId === item.id) {
                             api.removeMovie(movie._id)
                                 .then(() => {
-                                    setLike(false)
+                                    setLike(false);
                                 })
                                 .catch((e) => console.log(e.message))
                         }

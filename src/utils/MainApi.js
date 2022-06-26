@@ -75,42 +75,6 @@ class Api {
             .then(this._checkError);
     }
 
-    // ставим лайк 
-    /* changeLikeCardStatus(cardId, isLiked) {
-         const updateLike = {
-             headers: {
-                 'authorization': `Bearer ${localStorage.getItem('token')}`,
-                 'Content-Type': 'application/json',
-             },
-             method: 'PUT',
-         }
- 
-         const deleteLike = {
-             headers: {
-                 'authorization': `Bearer ${localStorage.getItem('token')}`,
-                 'Content-Type': 'application/json',
-             },
-             method: 'DELETE',
-         }
-         return fetch(`https://back.kachur.nomoreparties.sbs/cards/${cardId}/likes`, isLiked ? deleteLike : updateLike)
-             .then(this._checkError);
-     }
- 
-     // отправляем информацию 
-     patchProfileInfo(userData) {
-         const newConfing = {
-             method: 'PATCH',
-             headers: {
-                 'authorization': `Bearer ${localStorage.getItem('token')}`,
-                 'Content-Type': 'application/json',
-             },
-             body: JSON.stringify(userData),
-         }
-         return fetch('https://back.kachur.nomoreparties.sbs/users/me', newConfing)
-             .then(this._checkError);
-     }*/
-
-
 }
 
 export default new Api({
