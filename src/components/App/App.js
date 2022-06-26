@@ -183,7 +183,7 @@ function App() {
             })
             .catch((e) => console.log(e.message))
         }
-      }
+      } else return;
     }
     if (location.pathname === '/signin') {
       if (localStorage.getItem('token')) {
@@ -205,7 +205,7 @@ function App() {
             })
             .catch((e) => console.log(e.message))
         }
-      }
+      } else return;
     }
     if (location.pathname === '/movies') {
       setMovie(false); setMovieSave(true);
