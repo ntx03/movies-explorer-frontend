@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 
-function MoviesCardList({ movie }) {
+function MoviesCardList({ movie, movies, handleMovieDelete, saveMovies, list }) {
+
     return (
-        <div className='list'>
+        <div className={list ? 'list' : 'list_none'}>
             <div className='list__container'>
                 <div className='list__cards'>
-                    <MoviesCard movie={movie} />
-                    <MoviesCard movie={movie} />
-                    <MoviesCard movie={movie} />
-                    <MoviesCard movie={movie} />
-                    <MoviesCard movie={movie} />
+                    {Array.prototype.map.call(movies, function (item) {
+                        return (
+                            <MoviesCard
+                                movie={movie}
+                                key={movie ? item._id : item.id}
+                                item={item}
+                                handleMovieDelete={handleMovieDelete}
+                                saveMovies={saveMovies}
+                            />
+                        )
+                    })}
                 </div>
             </div>
         </div>

@@ -6,8 +6,6 @@ import AboutProject from './AboutProject/AboutProject';
 import Techs from './Techs/Techs';
 import AboutMe from './AboutMe/AboutMe';
 import Portfolio from './Portfolio/Portfolio';
-import { Route, Routes } from 'react-router-dom';
-import { Scrollchor } from 'react-scrollchor';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
@@ -17,7 +15,7 @@ function Main(props) {
 
     return (
         <section className='main'>
-            <Header loggedIn={props.loggedIn} movie={props.movie} movieSave={props.movieSave} />
+            <Header loggedIn={props.loggedIn} movie={props.movie} movieSave={props.movieSave} errorRegisterEmail={props.errorRegisterEmail} errorloginAuthorize={props.errorloginAuthorize} />
             <Promo />
             <NavTab />
             <AboutProject />

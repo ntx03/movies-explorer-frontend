@@ -42,7 +42,7 @@
     margin: 10px auto 10px 0;
 }
 
-.pegister__input {
+.register__input {
     padding: 0;
     margin: 0;
     font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
@@ -51,6 +51,25 @@
     font-style: normal;
     font-weight: normal;
     color: #FFFFFF;
+    width: 381px;
+    height: 46px;
+    background-color: #2F2F2F;
+    border-radius: 8px;
+    border: none;
+    padding-left: 15px;
+    outline: none;
+    margin: 0 auto 10px auto;
+}
+
+.register__input-error {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 13px;
+    line-height: 16px;
+    font-style: normal;
+    font-weight: normal;
+    color: #EE3465;
     width: 381px;
     height: 46px;
     background-color: #2F2F2F;
@@ -79,6 +98,10 @@
     text-align: start;
 }
 
+.register__name-error-none {
+    display: none;
+}
+
 .register__button {
     padding: 0;
     margin: 0;
@@ -98,6 +121,30 @@
 }
 
 .register__button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.5s;
+}
+
+.register__button-disable {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    text-align: center;
+    width: 396px;
+    height: 45px;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    border: none;
+    margin-bottom: 16px;
+}
+
+.register__button-disable:hover {
     cursor: pointer;
     opacity: 0.8;
     transition: 0.5s;
@@ -177,7 +224,17 @@
         width: 245px;
     }
 
+    .pegister__input-error {
+        width: 245px;
+    }
+
     .register__button {
+        width: 260px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .register__button-disable {
         width: 260px;
         font-size: 12px;
         line-height: 14px;

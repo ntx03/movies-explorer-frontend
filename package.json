@@ -12,13 +12,15 @@
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "5.0.1",
     "react-scrollchor": "^7.0.2",
+    "react-validation": "^3.0.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && scp -r ./build/* ntx033@51.250.87.177:/home/ntx033/movies-frontend"
   },
   "eslintConfig": {
     "extends": [

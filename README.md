@@ -1,3 +1,15 @@
-# Макет figma сервиса по поиску фильмов Качур Андрея
+# Сервис по поиску фильмов
 
-Сслылка на макет figma моего диплома лежит по этому адресу: https://disk.yandex.ru/d/k3b40z5AZV3c8Q.
+frontend: https://ntx033.kachur.nomoreparties.sbs
+back-end: https://back.kachur.nomoreparties.sbs
+
+Представляет возможность найти и сохранить найденный вами фильм.
+
+## Технологии
+
+React
+Javascript
+HTML
+CSS
+BEM
+Webpack

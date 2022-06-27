@@ -53,6 +53,19 @@
     text-align: end;
 }
 
+.profile__input-error {
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 11px;
+    line-height: 13px;
+    font-style: normal;
+    font-weight: normal;
+    color: #EE3465;
+    background-color: #202020;
+    border: none;
+    outline: none;
+    text-align: end;
+}
+
 .profile__line {
     max-width: 410px;
     margin: 6px 0 0 0;
@@ -97,6 +110,10 @@
     text-decoration: none;
     width: fit-content;
     background-color: #202020;
+}
+
+.profile__exit_none {
+    display: none;
 }
 
 .profile__exit:hover {
@@ -164,7 +181,7 @@
     position: absolute;
     width: 410px;
     height: 13px;
-    top: 517px;
+    top: 490px;
     left: 0;
     text-align: center;
 }
@@ -172,6 +189,55 @@
 .profile__edit-error_none {
     display: none;
 }
+
+.profile__button {
+    padding: 0;
+    margin-top: 220px;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-align: center;
+    width: 410px;
+    height: 45px;
+    background-color: #4285f4;
+    border-radius: 3px;
+    border: none;
+    margin-bottom: 16px;
+}
+
+.profile__button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.5s;
+}
+
+
+.profile__button_none {
+    display: none;
+}
+
+.profile__button-disable {
+    padding: 0;
+    margin-top: 220px;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    color: #c2c2c2;
+    text-align: center;
+    width: 410px;
+    height: 45px;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    border: none;
+    margin-bottom: 16px;
+}
+
+
 
 @media (max-width:850px) {
     .profile__title {
@@ -182,14 +248,17 @@
     .profile__edit {
         margin-top: 200px;
     }
+
+    .profile__edit-error {
+        top: 620px;
+    }
 }
 
 
 
 @media (max-width:450px) {
     .profile__container {
-        margin-left: 30px;
-        margin-right: 30px;
+        max-width: 260px;
     }
 
     .profile__save {
@@ -212,4 +281,23 @@
         font-size: 12px;
         line-height: 14px;
     }
+
+    .profile__button {
+        width: 260px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile__button-disable {
+        width: 260px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile__edit-error {
+        top: 440px;
+        width: 260px;
+    }
+
+
 }
